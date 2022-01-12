@@ -1,4 +1,4 @@
-package com.happylearn;
+package com.happylearn.views;
 
 import android.os.Bundle;
 
@@ -8,14 +8,20 @@ import android.view.ViewGroup;
 
 import androidx.fragment.app.Fragment;
 
-public class LoginFragment extends Fragment {
+import com.happylearn.R;
 
-    public LoginFragment() {
+public class HomeFragment extends Fragment {
+
+
+    public HomeFragment() {
+        // Required empty public constructor
     }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_login, container, false);
+        // Inflate the layout for this fragment
+        return inflater.inflate(R.layout.fragment_home, container, false);
     }
 }
