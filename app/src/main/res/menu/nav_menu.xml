@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" android:id="@+id/nav_menu" xmlns:tools="http://schemas.android.com/tools"  tools:context=".MainActivity">
+    <item android:id="@+id/home_itm"
+        android:title="Home"/>
+    <item android:id="@+id/login_itm"
+        android:title="Login"
+        />
+
+    <!--        android:visibility="@{BindingUtils.isUserLogged(userData) ? View.VISIBLE : View.GONE}"-->
+    <item android:id="@+id/mie_prenotazioni_itm"
+        android:title="Mie Prenotazioni"
+        />
+    <!--        android:visibility="@{BindingUtils.isUserLogged(userData) ? View.VISIBLE : View.GONE}"-->
+    <item android:id="@+id/prenotazioni_itm"
+        android:title="Prenotazioni"
+        />
+
+    <!--        android:visibility="@{BindingUtils.isUserAdmin(userData) ? View.VISIBLE : View.GONE}"-->
+    <item android:id="@+id/logout_itm"
+        android:title="Logout"
+        />
+
+</menu>

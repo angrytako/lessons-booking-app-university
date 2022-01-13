@@ -1,30 +1,33 @@
 package com.happylearn.dao;
 
+import androidx.databinding.Observable;
+import androidx.databinding.ObservableField;
+
 public class UserData {
-    String username;
+    ObservableField<String> username;
 
     public UserData(String username, String role) {
-        this.username = username;
-        this.role = role;
+        this.username = new ObservableField<>(username);
+        this.role = new ObservableField<>(role);
     }
 
-    public String getUsername() {
+    public ObservableField<String> getUsername() {
         return username;
     }
 
     public void setUsername(String username) {
-        this.username = username;
+        this.username.set(username);
     }
 
-    public String getRole() {
+    public ObservableField<String> getRole() {
         return role;
     }
 
     public void setRole(String role) {
-        this.role = role;
+        this.role.set(role);
     }
 
-    String role;
+    ObservableField<String> role;
 
     @Override
     public String toString() {
@@ -33,4 +36,5 @@ public class UserData {
                 ", role='" + role + '\'' +
                 '}';
     }
+
 }

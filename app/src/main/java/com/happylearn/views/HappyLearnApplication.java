@@ -4,13 +4,15 @@ import android.app.Application;
 
 import androidx.databinding.Bindable;
 
+import com.happylearn.dao.UserData;
+
 public class HappyLearnApplication extends Application {
-    private String username;
-    public String getUsername(){
-        return username;
+    private UserData userData;
+    public UserData getUserData(){
+        return userData;
     }
-    public String setUsername(String username){
-        return username;
+    public void setUserData(UserData userData){
+        this.userData = userData;
     }
 
 

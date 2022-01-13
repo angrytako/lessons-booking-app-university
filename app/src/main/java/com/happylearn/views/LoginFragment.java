@@ -18,6 +18,7 @@ import com.happylearn.routes.LoginController;
 
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 public class LoginFragment extends Fragment {
 
@@ -39,10 +40,17 @@ public class LoginFragment extends Fragment {
         loginBtn.setOnClickListener((btnView)->{
             String username = usernameEt.getText().toString();
             String password = passwordEt.getText().toString();
+            if(usernameEt.getText().toString().equals("")) {
+                Toast.makeText(this.getContext(), "Inserisci uno username", Toast.LENGTH_LONG).show();
+                return;
+            }
+            if(passwordEt.getText().toString().equals("")){
+                Toast.makeText(this.getContext(),"Inserisci una password",Toast.LENGTH_LONG).show();
+                return;
+            }
             //TODO controllo username e pw inseriti
             UserLogin userLogin = new UserLogin(username,password);
-            Log.d("NOODLE","PRESSED");
-            LoginController controller = new LoginController(userLogin, getContext());
+            LoginController controller = new LoginController(userLogin, getContext(), getActivity());
             controller.start();
         });
 

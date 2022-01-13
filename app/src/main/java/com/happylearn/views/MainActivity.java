@@ -3,23 +3,31 @@ package com.happylearn.views;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.databinding.DataBindingUtil;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.google.android.material.navigation.NavigationView;
 import com.happylearn.R;
+import com.happylearn.bindings.MenuController;
+import com.happylearn.dao.UserData;
+import com.happylearn.databinding.ActivityMainBinding;
+import com.happylearn.databinding.NavHeaderBinding;
 
 public class MainActivity extends AppCompatActivity {
+    ActivityMainBinding mBinding;
     Fragment currentLoadedFragment = null;
     ActionBarDrawerToggle toggle = null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        mBinding = DataBindingUtil.setContentView(this,R.layout.activity_main);
         DrawerLayout navbar = findViewById(R.id.drawer_layout);
         NavigationView navbarItems = findViewById(R.id.navbar_items_nv);
         toggle = new ActionBarDrawerToggle(this, navbar, R.string.menu_open, R.string.menu_close);
@@ -33,7 +41,17 @@ public class MainActivity extends AppCompatActivity {
                 .setReorderingAllowed(true)
                 .add(R.id.fragment_container, HomeFragment.class, null)
                 .commit();
-        String username =  ((HappyLearnApplication) this.getApplication()).getUsername();
+        //set initial userdata
+        //TODO network request for this one
+        UserData startingData = new UserData("Guest","guest");
+        ((HappyLearnApplication) this.getApplication()).setUserData(startingData);
+        //Bind to header
+        View hv = mBinding.navbarItemsNv.getHeaderView(0);
+        NavHeaderBinding.bind(hv).setUserData(startingData);
+        //Bind to menu
+        Menu mv = mBinding.navbarItemsNv.getMenu();
+        MenuController mc = new MenuController(mv, startingData.getRole());
+        mBinding.setUserData(startingData);
         Activity main = this;
         navbarItems.setNavigationItemSelectedListener((menuItem)->{
             switch (menuItem.getItemId()){
@@ -41,6 +59,7 @@ public class MainActivity extends AppCompatActivity {
                     navbar.closeDrawers();
                     getSupportFragmentManager().beginTransaction()
                             .setReorderingAllowed(true)
+                            .addToBackStack(null)
                             .remove(getSupportFragmentManager().getFragments().get(0))
                             .add(R.id.fragment_container, HomeFragment.class, null)
                             .commit();
@@ -49,6 +68,7 @@ public class MainActivity extends AppCompatActivity {
                     navbar.closeDrawers();
                     getSupportFragmentManager().beginTransaction()
                             .setReorderingAllowed(true)
+                            .addToBackStack(null)
                             .remove(getSupportFragmentManager().getFragments().get(0))
                             .add(R.id.fragment_container, LoginFragment.class, null)
                             .commit();
