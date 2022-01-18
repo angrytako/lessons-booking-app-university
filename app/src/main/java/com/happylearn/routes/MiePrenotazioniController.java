@@ -77,7 +77,6 @@ public class MiePrenotazioniController implements Callback<List<Prenotazione>> {
     public void onResponse(Call<List<Prenotazione>> call, Response<List<Prenotazione>> response) {
         if(response.isSuccessful()) {
             List<Prenotazione> prenotazioni = response.body();
-            Toast.makeText(context, "SUCCESS", Toast.LENGTH_LONG).show();
             ((HappyLearnApplication)activity.getApplication()).setBookings(prenotazioni);
             // Create adapter passing in the sample user data
             PrenotazioniAdapter adapter = new PrenotazioniAdapter( ((HappyLearnApplication)activity.getApplication()).getBookings());

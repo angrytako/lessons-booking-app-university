@@ -12,7 +12,7 @@ import java.util.List;
 
 public class HappyLearnApplication extends Application {
     private UserData userData;
-    private List<Prenotazione> bookings = new ArrayList<>();
+    private List<Prenotazione> bookings = null;
     public UserData getUserData(){
         return userData;
     }

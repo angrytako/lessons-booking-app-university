@@ -38,16 +38,24 @@ public class MiePrenotazioniFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         // Lookup the recyclerview in activity layout
         RecyclerView miePrenotazioni = (RecyclerView) view.findViewById(R.id.mie_prenotazioni_rv);
+        //choice to not make a heavy network request if i already have a booking
+        //this only fails if I make a booking myself from another client or if
+        //an admin does it
+        //this whole think might have to be moved at the start of the main activity,
+        //for performance gain
+        if(((HappyLearnApplication)this.getActivity().getApplication()).getBookings() == null) {
+            String username = ((HappyLearnApplication)this.getActivity().getApplication()).getUserData().getUsername().get();
+            MiePrenotazioniController prenotazioniController = new MiePrenotazioniController(this.getContext(), this.getActivity(), username, miePrenotazioni);
+            prenotazioniController.start();
+        }
+        //need this else since removing the fragment takes it away
+        else {
+            PrenotazioniAdapter adapter = new PrenotazioniAdapter(((HappyLearnApplication)this.getActivity().getApplication()).getBookings());
+            // Attach the adapter to the recyclerview to populate items
+            miePrenotazioni.setAdapter(adapter);
+            // Set layout manager to position the items
+            miePrenotazioni.setLayoutManager(new LinearLayoutManager(this.getContext()));
 
-        // Initialize contacts
-        ArrayList<Prenotazione> bookings = new ArrayList<>();
-        bookings.add(new Prenotazione("corso1",21,"Pippo","Baudo","amministratore","ToneTuga","attiva",0, 0));
-        bookings.add(new Prenotazione("corso2",11,"Pippo","Baudo","cliente","Anna","cancellata",1, 1));
-        String username = ((HappyLearnApplication)this.getActivity().getApplication()).getUserData().getUsername().get();
-
-        MiePrenotazioniController prenotazioniController = new MiePrenotazioniController(this.getContext(),this.getActivity(),username, miePrenotazioni);
-        prenotazioniController.start();
-
-
+        }
     }
 }
