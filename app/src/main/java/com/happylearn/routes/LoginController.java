@@ -20,6 +20,7 @@ import com.happylearn.views.HomeFragment;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import okhttp3.OkHttpClient;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -27,25 +28,37 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class LoginController implements Callback<SimpleUserData> {
-    static final String BASE_URL =  "http://192.168.1.207:8080/";
+    private String BASE_URL;
     private  Context context;
     private UserLogin userLogin;
     private Activity activity;
+
     public LoginController(UserLogin userLogin, Context context,  Activity activity) {
         this.userLogin = userLogin;
         this.context = context;
         this.activity = activity;
+        BASE_URL = context.getString(R.string.BASE_URL);
     }
 
     public void start() {
         Gson gson = new GsonBuilder()
                 .setLenient()
                 .create();
+
+        GetAndSetSessionInterceptor sessionInterceptor = new GetAndSetSessionInterceptor((HappyLearnApplication)activity.getApplication());
+
+        OkHttpClient okHttpClient = new OkHttpClient()
+                .newBuilder()
+                //adding interceptor for session cookie
+                .addInterceptor(sessionInterceptor)
+                .build();
+
+
         Retrofit retrofit = new Retrofit.Builder()
+                .client(okHttpClient)
                 .baseUrl(BASE_URL)
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .build();
-        Log.d("NOODLE","I M HERE2");
         Routes gerritAPI = retrofit.create(Routes.class);
         Call<SimpleUserData> call = gerritAPI.login(this.userLogin);
         call.enqueue(this);
@@ -57,9 +70,11 @@ public class LoginController implements Callback<SimpleUserData> {
     public void onResponse(Call<SimpleUserData> call, Response<SimpleUserData> response) {
             if(response.isSuccessful()) {
                 SimpleUserData userData = response.body();
+
                 UserData globalUserData = ((HappyLearnApplication)activity.getApplication()).getUserData();
                 globalUserData.setUsername(userData.getUsername());
                 globalUserData.setRole(userData.getRole());
+
                 ((AppCompatActivity)activity).getSupportFragmentManager().beginTransaction()
                         .setReorderingAllowed(true)
                         .addToBackStack(null)
@@ -79,6 +94,7 @@ public class LoginController implements Callback<SimpleUserData> {
     @Override
     public void onFailure(Call<SimpleUserData> call, Throwable t) {
         Log.d("NOODLE",  t.toString());
+        Toast.makeText(context, "errore inatteso", Toast.LENGTH_LONG).show();
         t.printStackTrace();
     }
 }

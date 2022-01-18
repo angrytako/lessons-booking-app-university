@@ -37,6 +37,7 @@ public class LoginFragment extends Fragment {
         Button loginBtn  = view.findViewById(R.id.login_btn);
         EditText usernameEt = view.findViewById(R.id.username_et);
         EditText passwordEt = view.findViewById(R.id.password_et);
+
         loginBtn.setOnClickListener((btnView)->{
             String username = usernameEt.getText().toString();
             String password = passwordEt.getText().toString();
@@ -48,7 +49,6 @@ public class LoginFragment extends Fragment {
                 Toast.makeText(this.getContext(),"Inserisci una password",Toast.LENGTH_LONG).show();
                 return;
             }
-            //TODO controllo username e pw inseriti
             UserLogin userLogin = new UserLogin(username,password);
             LoginController controller = new LoginController(userLogin, getContext(), getActivity());
             controller.start();

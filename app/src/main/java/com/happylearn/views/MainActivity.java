@@ -30,13 +30,17 @@ public class MainActivity extends AppCompatActivity {
         mBinding = DataBindingUtil.setContentView(this,R.layout.activity_main);
         DrawerLayout navbar = findViewById(R.id.drawer_layout);
         NavigationView navbarItems = findViewById(R.id.navbar_items_nv);
+
         toggle = new ActionBarDrawerToggle(this, navbar, R.string.menu_open, R.string.menu_close);
         navbar.addDrawerListener(toggle);
         toggle.syncState();
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+
         HomeFragment homeFrag = new HomeFragment();
         LoginFragment loginFrag = new LoginFragment();
-
+        MiePrenotazioniFragment miePrenFrag = new MiePrenotazioniFragment();
+        //setting fragment on view
         getSupportFragmentManager().beginTransaction()
                 .setReorderingAllowed(true)
                 .add(R.id.fragment_container, HomeFragment.class, null)
@@ -45,13 +49,16 @@ public class MainActivity extends AppCompatActivity {
         //TODO network request for this one
         UserData startingData = new UserData("Guest","guest");
         ((HappyLearnApplication) this.getApplication()).setUserData(startingData);
+
+        //bind this classe's view
+        mBinding.setUserData(startingData);
+
         //Bind to header
         View hv = mBinding.navbarItemsNv.getHeaderView(0);
         NavHeaderBinding.bind(hv).setUserData(startingData);
         //Bind to menu
         Menu mv = mBinding.navbarItemsNv.getMenu();
         MenuController mc = new MenuController(mv, startingData.getRole());
-        mBinding.setUserData(startingData);
         Activity main = this;
         navbarItems.setNavigationItemSelectedListener((menuItem)->{
             switch (menuItem.getItemId()){
@@ -73,6 +80,14 @@ public class MainActivity extends AppCompatActivity {
                             .add(R.id.fragment_container, LoginFragment.class, null)
                             .commit();
                     break;
+                case R.id.mie_prenotazioni_itm:
+                    navbar.closeDrawers();
+                    getSupportFragmentManager().beginTransaction()
+                            .setReorderingAllowed(true)
+                            .addToBackStack(null)
+                            .remove(getSupportFragmentManager().getFragments().get(0))
+                            .add(R.id.fragment_container, MiePrenotazioniFragment.class, null)
+                            .commit();
             }
             return true;
         });

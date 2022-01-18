@@ -4,6 +4,7 @@ import java.io.Serializable;
 
 public class UserLogin implements Serializable {
     private String username;
+    private String password;
 
     public UserLogin(String username, String password) {
         this.username = username;
@@ -26,5 +27,4 @@ public class UserLogin implements Serializable {
         this.password = password;
     }
 
-    private String password;
 }
