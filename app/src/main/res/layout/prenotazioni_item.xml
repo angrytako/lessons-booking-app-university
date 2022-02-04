@@ -8,6 +8,7 @@
     </data>
     <LinearLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
+        android:background="@{BindingUtils.isActive(booking.stato) ? @color/blue : BindingUtils.isCompleted(booking.stato) ? @color/green : @color/red}"
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -48,7 +49,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="@{booking.corso.toString()}"
+                android:text="@{booking.corso}"
                 />
         </LinearLayout>
         <LinearLayout
@@ -66,7 +67,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="@{BindingUtils.getDay(booking.giorno.getInteger())}"
+                android:text="@{BindingUtils.getDay(booking.giorno)}"
                 />
         </LinearLayout>
         <LinearLayout
@@ -84,11 +85,11 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="@{BindingUtils.getHours(booking.orario.getInteger())}"
+                android:text="@{BindingUtils.getHours(booking.orario)}"
                 />
         </LinearLayout>
         <LinearLayout
-            android:visibility="@{BindingUtils.getVisibility(booking.stato.toString())}"
+            android:visibility="@{BindingUtils.getVisibility(booking.stato)}"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">

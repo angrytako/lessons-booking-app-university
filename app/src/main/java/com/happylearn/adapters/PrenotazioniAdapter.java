@@ -16,6 +16,7 @@ import com.happylearn.R;
 import com.happylearn.dao.BindablePrenotazione;
 import com.happylearn.dao.Prenotazione;
 import com.happylearn.databinding.PrenotazioniItemBinding;
+import com.happylearn.routes.ChangePrenotazioneRequest;
 
 import java.util.List;
 
@@ -33,7 +34,6 @@ public class PrenotazioniAdapter extends
         // Your holder should contain a member variable
         // for any view that will be set as you render a row
         PrenotazioniItemBinding itemView;
-
         // We also create a constructor that accepts the entire item row
         // and does the view lookups to find each subview
         public ViewHolder(PrenotazioniItemBinding itemView) {
@@ -64,10 +64,22 @@ public class PrenotazioniAdapter extends
 
         // Set item views based on your views and data model
         holder.itemView.setBooking(booking);
-        //TODO deal with buttons
-//        Button button = holder.messageButton;
-//        button.setText(contact.isOnline() ? "Message" : "Offline");
-//        button.setEnabled(contact.isOnline());
+
+        //setting buttons event listeners
+        holder.itemView.cancelBtn.setOnClickListener((e)->{
+            Prenotazione newBooking = bookings.get(position).getSerializable();
+            newBooking.setStato("cancellata");
+            ChangePrenotazioneRequest cp = new ChangePrenotazioneRequest(e.getContext(), bookings,position,newBooking,this);
+            cp.start();
+        });
+
+        holder.itemView.completeBtn.setOnClickListener((e)->{
+            Prenotazione newBooking = bookings.get(position).getSerializable();
+            newBooking.setStato("effettuata");
+            ChangePrenotazioneRequest cp = new ChangePrenotazioneRequest(e.getContext(), bookings,position,newBooking,this);
+            cp.start();
+        });
+
     }
 
     @Override

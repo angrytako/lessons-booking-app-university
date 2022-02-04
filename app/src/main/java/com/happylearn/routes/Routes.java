@@ -11,6 +11,7 @@ import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
+import retrofit2.http.PUT;
 import retrofit2.http.Query;
 
 public interface Routes {
@@ -20,7 +21,7 @@ public interface Routes {
     @GET("Noodle_war/MyInfoServlet")
     Call<SimpleUserData> myInfo();
 
-    @POST("Noodle_war/PrenotazioniServlet")
+    @PUT("Noodle_war/PrenotazioniServlet")
     Call<SimpleMessage> changePrenotazione(@Body Prenotazione updatedPrenotazione);
 
     @GET("Noodle_war/PrenotazioniServlet")

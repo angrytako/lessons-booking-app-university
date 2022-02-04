@@ -4,6 +4,7 @@ import android.view.View;
 
 import androidx.databinding.ObservableField;
 
+import com.happylearn.R;
 import com.happylearn.dao.UserData;
 
 public class BindingUtils {
@@ -18,12 +19,26 @@ public class BindingUtils {
     public static String getHours(int hourNum){
         return  hours[hourNum];
     }
+
     public static int getVisibility(String status){
         if(status.equals("attiva")) return View.VISIBLE;
         else return View.INVISIBLE;
     }
+    public static boolean isActive(String status){
+        if(status.equals("attiva")) return true;
+        return false;
+    }
+    public static boolean isCompleted(String status){
+        if(status.equals("effettuata"))  return true;
+        return false;
+    }
     public static boolean isUserAdmin(UserData user){
         return user.getRole().get().equals("amministratore");
+    }
+    public static int getColour(String status){
+        if(status.equals("attiva")) return R.color.blue;
+        else if(status.equals("effettuata")) return R.color.green;
+        else return R.color.red;
     }
     public static String getFullName(ObservableField<String> name, ObservableField<String> surname){
       return  name.get() + " " + surname.get();

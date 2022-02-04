@@ -92,8 +92,8 @@ public class BindablePrenotazione {
         return stato;
     }
 
-    public void setStato(ObservableField<String> stato) {
-        this.stato = stato;
+    public void setStato(String stato) {
+        this.stato.set(stato);
     }
 
     public ObservableField<Integer> getGiorno() {

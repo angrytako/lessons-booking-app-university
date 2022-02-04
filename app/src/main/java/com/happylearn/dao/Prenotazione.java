@@ -22,8 +22,11 @@ public class Prenotazione {
             this.cognomeDocente = cognomeDocente;
         }
 
+    public void setStato(String stato) {
+        this.stato = stato;
+    }
 
-        public String getCorso() {
+    public String getCorso() {
             return corso;
         }
 
