@@ -1,6 +1,7 @@
 package com.happylearn.routes;
 
 import com.happylearn.dao.Prenotazione;
+import com.happylearn.dao.SimpleMessage;
 import com.happylearn.dao.SimpleUserData;
 import com.happylearn.dao.UserLogin;
 
@@ -15,8 +16,13 @@ import retrofit2.http.Query;
 public interface Routes {
     @POST("Noodle_war/loginServlet")
     Call<SimpleUserData> login(@Body UserLogin userLogin);
+
     @GET("Noodle_war/MyInfoServlet")
     Call<SimpleUserData> myInfo();
+
+    @POST("Noodle_war/PrenotazioniServlet")
+    Call<SimpleMessage> changePrenotazione(@Body Prenotazione updatedPrenotazione);
+
     @GET("Noodle_war/PrenotazioniServlet")
     Call<List<Prenotazione>> myPrenotazioni(@Query("username") String username);
 }

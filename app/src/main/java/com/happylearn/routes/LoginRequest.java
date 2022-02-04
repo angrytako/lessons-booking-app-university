@@ -10,14 +10,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.happylearn.R;
-import com.happylearn.dao.SimpleMessage;
 import com.happylearn.dao.SimpleUserData;
 import com.happylearn.dao.UserData;
 import com.happylearn.dao.UserLogin;
+import com.happylearn.routes.interceptors.GetAndSetSessionInterceptor;
 import com.happylearn.views.HappyLearnApplication;
 import com.happylearn.views.HomeFragment;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import okhttp3.OkHttpClient;
@@ -27,13 +26,13 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class LoginController implements Callback<SimpleUserData> {
+public class LoginRequest implements Callback<SimpleUserData> {
     private String BASE_URL;
     private  Context context;
     private UserLogin userLogin;
     private Activity activity;
 
-    public LoginController(UserLogin userLogin, Context context,  Activity activity) {
+    public LoginRequest(UserLogin userLogin, Context context, Activity activity) {
         this.userLogin = userLogin;
         this.context = context;
         this.activity = activity;

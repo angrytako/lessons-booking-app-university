@@ -4,6 +4,7 @@ import android.app.Application;
 
 import androidx.databinding.Bindable;
 
+import com.happylearn.dao.BindablePrenotazione;
 import com.happylearn.dao.Prenotazione;
 import com.happylearn.dao.UserData;
 
@@ -12,7 +13,7 @@ import java.util.List;
 
 public class HappyLearnApplication extends Application {
     private UserData userData;
-    private List<Prenotazione> bookings = null;
+    private List<BindablePrenotazione> bookings = null;
     public UserData getUserData(){
         return userData;
     }
@@ -21,11 +22,11 @@ public class HappyLearnApplication extends Application {
         this.userData = userData;
     }
 
-    public List<Prenotazione> getBookings() {
+    public List<BindablePrenotazione> getBookings() {
         return bookings;
     }
 
-    public void setBookings(List<Prenotazione> bookings) {
+    public void setBookings(List<BindablePrenotazione> bookings) {
         this.bookings = bookings;
     }
 

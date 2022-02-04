@@ -14,10 +14,7 @@ import android.view.ViewGroup;
 
 import com.happylearn.R;
 import com.happylearn.adapters.PrenotazioniAdapter;
-import com.happylearn.dao.Prenotazione;
-import com.happylearn.routes.MiePrenotazioniController;
-
-import java.util.ArrayList;
+import com.happylearn.routes.MiePrenotazioniRequest;
 
 public class MiePrenotazioniFragment extends Fragment {
 
@@ -45,7 +42,7 @@ public class MiePrenotazioniFragment extends Fragment {
         //for performance gain
         if(((HappyLearnApplication)this.getActivity().getApplication()).getBookings() == null) {
             String username = ((HappyLearnApplication)this.getActivity().getApplication()).getUserData().getUsername().get();
-            MiePrenotazioniController prenotazioniController = new MiePrenotazioniController(this.getContext(), this.getActivity(), username, miePrenotazioni);
+            MiePrenotazioniRequest prenotazioniController = new MiePrenotazioniRequest(this.getContext(), this.getActivity(), username, miePrenotazioni);
             prenotazioniController.start();
         }
         //need this else since removing the fragment takes it away

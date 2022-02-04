@@ -2,19 +2,17 @@ package com.happylearn.views;
 
 import android.os.Bundle;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 
 import com.happylearn.R;
 import com.happylearn.dao.UserLogin;
-import com.happylearn.routes.LoginController;
+import com.happylearn.routes.LoginRequest;
 
 import android.widget.Button;
 import android.widget.EditText;
@@ -50,7 +48,7 @@ public class LoginFragment extends Fragment {
                 return;
             }
             UserLogin userLogin = new UserLogin(username,password);
-            LoginController controller = new LoginController(userLogin, getContext(), getActivity());
+            LoginRequest controller = new LoginRequest(userLogin, getContext(), getActivity());
             controller.start();
         });
 
