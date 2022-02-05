@@ -30,20 +30,18 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class MiePrenotazioniRequest implements Callback<List<Prenotazione>> {
+public class PrenotazioniRequest implements Callback<List<Prenotazione>> {
     private String BASE_URL;
-    private  Context context;
+    private Context context;
     private UserLogin userLogin;
     private Activity activity;
-    private String username;
-    private RecyclerView miePrenotazioni;
-    public MiePrenotazioniRequest(Context context, Activity activity, String username, RecyclerView miePrenotazioni) {
+    private RecyclerView prenotazioni;
+    public PrenotazioniRequest(Context context, Activity activity,  RecyclerView miePrenotazioni) {
         this.userLogin = userLogin;
         this.context = context;
         this.activity = activity;
-        this.username = username;
         BASE_URL = context.getString(R.string.BASE_URL);
-        this.miePrenotazioni = miePrenotazioni;
+        this.prenotazioni = miePrenotazioni;
     }
 
     public void start() {
@@ -66,7 +64,7 @@ public class MiePrenotazioniRequest implements Callback<List<Prenotazione>> {
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .build();
         Routes gerritAPI = retrofit.create(Routes.class);
-        Call<List<Prenotazione>> call = gerritAPI.myPrenotazioni(username);
+        Call<List<Prenotazione>> call = gerritAPI.prenotazioni();
         call.enqueue(this);
 
 
@@ -79,14 +77,14 @@ public class MiePrenotazioniRequest implements Callback<List<Prenotazione>> {
             ArrayList<BindablePrenotazione> bindablePrenotazioni = new ArrayList<>();
             for (Prenotazione p : prenotazioni)
                 bindablePrenotazioni.add(new BindablePrenotazione(p));
-            ((HappyLearnApplication)activity.getApplication()).setMyBookings(bindablePrenotazioni);
+            ((HappyLearnApplication)activity.getApplication()).setBookings(bindablePrenotazioni);
             // Create adapter passing in the sample user data
-            PrenotazioniAdapter adapter = new PrenotazioniAdapter( ((HappyLearnApplication)activity.getApplication()).getMyBookings(), "myBookings");
+            PrenotazioniAdapter adapter = new PrenotazioniAdapter( ((HappyLearnApplication)activity.getApplication()).getBookings(), "bookings");
 
             // Attach the adapter to the recyclerview to populate items
-            miePrenotazioni.setAdapter(adapter);
+            this.prenotazioni.setAdapter(adapter);
             // Set layout manager to position the items
-            miePrenotazioni.setLayoutManager(new LinearLayoutManager(context));
+            this.prenotazioni.setLayoutManager(new LinearLayoutManager(context));
         } else{
             try {
                 JSONObject jObjError = new JSONObject(response.errorBody().string());

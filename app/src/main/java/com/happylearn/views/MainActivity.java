@@ -88,6 +88,16 @@ public class MainActivity extends AppCompatActivity {
                             .remove(getSupportFragmentManager().getFragments().get(0))
                             .add(R.id.fragment_container, MiePrenotazioniFragment.class, null)
                             .commit();
+                    break;
+                case R.id.prenotazioni_itm:
+                    navbar.closeDrawers();
+                    getSupportFragmentManager().beginTransaction()
+                            .setReorderingAllowed(true)
+                            .addToBackStack(null)
+                            .remove(getSupportFragmentManager().getFragments().get(0))
+                            .add(R.id.fragment_container, PrenotazioniFragment.class, null)
+                            .commit();
+                    break;
             }
             return true;
         });

@@ -2,18 +2,14 @@ package com.happylearn.views;
 
 import android.app.Application;
 
-import androidx.databinding.Bindable;
-
 import com.happylearn.dao.BindablePrenotazione;
-import com.happylearn.dao.Prenotazione;
 import com.happylearn.dao.UserData;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class HappyLearnApplication extends Application {
     private UserData userData;
-    private List<BindablePrenotazione> bookings = null;
+    private List<BindablePrenotazione> myBookings = null, bookings = null;
     public UserData getUserData(){
         return userData;
     }
@@ -28,6 +24,14 @@ public class HappyLearnApplication extends Application {
 
     public void setBookings(List<BindablePrenotazione> bookings) {
         this.bookings = bookings;
+    }
+
+    public List<BindablePrenotazione> getMyBookings() {
+        return myBookings;
+    }
+
+    public void setMyBookings(List<BindablePrenotazione> myBookings) {
+        this.myBookings = myBookings;
     }
 
     public String getSessionCookie() {

@@ -15,8 +15,9 @@ import android.view.ViewGroup;
 import com.happylearn.R;
 import com.happylearn.adapters.PrenotazioniAdapter;
 import com.happylearn.routes.MiePrenotazioniRequest;
+import com.happylearn.routes.PrenotazioniRequest;
 
-public class MiePrenotazioniFragment extends Fragment {
+public class PrenotazioniFragment extends Fragment {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -27,27 +28,27 @@ public class MiePrenotazioniFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_mie_prenotazioni, container, false);
+        return inflater.inflate(R.layout.fragment_prenotazioni, container, false);
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         // Lookup the recyclerview in activity layout
-        RecyclerView miePrenotazioni = (RecyclerView) view.findViewById(R.id.mie_prenotazioni_rv);
+        RecyclerView miePrenotazioni = (RecyclerView) view.findViewById(R.id.prenotazioni_rv);
         //choice to not make a heavy network request if i already have a booking
         //this only fails if I make a booking myself from another client or if
         //an admin does it
         //this whole think might have to be moved at the start of the main activity,
         //for performance gain
-        if(((HappyLearnApplication)this.getActivity().getApplication()).getMyBookings() == null) {
+        if(((HappyLearnApplication)this.getActivity().getApplication()).getBookings() == null) {
             String username = ((HappyLearnApplication)this.getActivity().getApplication()).getUserData().getUsername().get();
-            MiePrenotazioniRequest prenotazioniController = new MiePrenotazioniRequest(this.getContext(), this.getActivity(), username, miePrenotazioni);
+            PrenotazioniRequest prenotazioniController = new PrenotazioniRequest(this.getContext(), this.getActivity(), miePrenotazioni);
             prenotazioniController.start();
         }
         //need this else since removing the fragment takes it away
         else {
-            PrenotazioniAdapter adapter = new PrenotazioniAdapter(((HappyLearnApplication)this.getActivity().getApplication()).getMyBookings(), "myBookings");
+            PrenotazioniAdapter adapter = new PrenotazioniAdapter(((HappyLearnApplication)this.getActivity().getApplication()).getBookings(), "bookings");
             // Attach the adapter to the recyclerview to populate items
             miePrenotazioni.setAdapter(adapter);
             // Set layout manager to position the items
@@ -55,4 +56,5 @@ public class MiePrenotazioniFragment extends Fragment {
 
         }
     }
+
 }

@@ -26,4 +26,7 @@ public interface Routes {
 
     @GET("Noodle_war/PrenotazioniServlet")
     Call<List<Prenotazione>> myPrenotazioni(@Query("username") String username);
+
+    @GET("Noodle_war/PrenotazioniServlet")
+    Call<List<Prenotazione>> prenotazioni();
 }

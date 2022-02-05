@@ -15,43 +15,24 @@
         android:paddingTop="10dp"
         android:paddingBottom="10dp"
         >
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="20sp"
-            android:orientation="horizontal">
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Utente"
-                />
-            <TextView
-                android:id="@+id/user_tv"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@{booking.utente}"
-                />
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="20sp"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Docente"
-                />
-            <TextView
-                android:id="@+id/teacher_tv"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@{BindingUtils.getFullName(booking.getNomeDocente(),booking.getCognomeDocente())}"
-                />
-        </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="20sp"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Docente"
+            />
+        <TextView
+            android:id="@+id/teacher_tv"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@{BindingUtils.getFullName(booking.getNomeDocente(),booking.getCognomeDocente())}"
+            />
+    </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -71,7 +52,6 @@
                 android:text="@{booking.corso}"
                 />
         </LinearLayout>
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="20sp"
@@ -113,13 +93,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
-            <Button
-                android:id="@+id/complete_btn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="10sp"
-                android:text="Completa"
-                />
+        <Button
+            android:id="@+id/complete_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="10sp"
+            android:text="Completa"
+            />
             <Button
                 android:id="@+id/cancel_btn"
                 android:layout_width="wrap_content"
@@ -127,6 +107,6 @@
                 android:textSize="10sp"
                 android:text="Cancella"
                 />
-        </LinearLayout>
+            </LinearLayout>
     </LinearLayout>
 </layout>

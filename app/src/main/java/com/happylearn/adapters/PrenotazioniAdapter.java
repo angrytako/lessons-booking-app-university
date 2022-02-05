@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.happylearn.R;
 import com.happylearn.dao.BindablePrenotazione;
 import com.happylearn.dao.Prenotazione;
+import com.happylearn.databinding.MiePrenotazioniItemBinding;
 import com.happylearn.databinding.PrenotazioniItemBinding;
 import com.happylearn.routes.ChangePrenotazioneRequest;
 
@@ -25,8 +26,10 @@ import java.util.List;
 public class PrenotazioniAdapter extends
         RecyclerView.Adapter<PrenotazioniAdapter.ViewHolder>{
     private List<BindablePrenotazione> bookings;
+    private String type;
 
-    public PrenotazioniAdapter(List<BindablePrenotazione> bookings) {
+    public PrenotazioniAdapter(List<BindablePrenotazione> bookings, String type) {
+        this.type = type;
         this.bookings = bookings;
     }
 
@@ -35,14 +38,22 @@ public class PrenotazioniAdapter extends
     public class ViewHolder extends RecyclerView.ViewHolder {
         // Your holder should contain a member variable
         // for any view that will be set as you render a row
-        PrenotazioniItemBinding itemView;
+        PrenotazioniItemBinding bookingsItemView = null;
+        MiePrenotazioniItemBinding MyBookingsItemView = null;
         // We also create a constructor that accepts the entire item row
         // and does the view lookups to find each subview
         public ViewHolder(PrenotazioniItemBinding itemView) {
             // Stores the itemView in a public final member variable that can be used
             // to access the context from any ViewHolder instance.
             super(itemView.getRoot());
-            this.itemView = itemView;
+            this.bookingsItemView = itemView;
+        }
+
+        public ViewHolder(MiePrenotazioniItemBinding itemView) {
+            // Stores the itemView in a public final member variable that can be used
+            // to access the context from any ViewHolder instance.
+            super(itemView.getRoot());
+            this.MyBookingsItemView = itemView;
         }
     }
 
@@ -92,10 +103,21 @@ public class PrenotazioniAdapter extends
         Context context = parent.getContext();
         LayoutInflater inflater = LayoutInflater.from(context);
         // Inflate the custom layout with binding
-        PrenotazioniItemBinding pBinding =  DataBindingUtil.inflate(inflater,R.layout.prenotazioni_item,parent,false);
+        //since it's used both by MiePrenotazioni and Prenotazioni, the type of item
+        //depends on which one is using it
+        PrenotazioniItemBinding pBinding = null;
+        MiePrenotazioniItemBinding mpBinding = null;
+        if(type.equals("bookings"))
+            pBinding =  DataBindingUtil.inflate(inflater,R.layout.prenotazioni_item,parent,false);
+        else
+            mpBinding =  DataBindingUtil.inflate(inflater,R.layout.mie_prenotazioni_item,parent,false);
 
         // Return a new holder instance
-        ViewHolder viewHolder = new ViewHolder(pBinding);
+        ViewHolder viewHolder;
+        if(pBinding != null)
+            viewHolder = new ViewHolder(pBinding);
+        else
+            viewHolder = new ViewHolder(mpBinding);
         return viewHolder;
     }
 
@@ -105,22 +127,38 @@ public class PrenotazioniAdapter extends
         BindablePrenotazione booking = bookings.get(position);
 
         // Set item views based on your views and data model
-        holder.itemView.setBooking(booking);
+        if(holder.MyBookingsItemView != null)
+            holder.MyBookingsItemView.setBooking(booking);
+        else holder.bookingsItemView.setBooking(booking);
 
         //setting buttons event listeners
         //each will have a confirmation dialog
-        holder.itemView.cancelBtn.setOnClickListener((e)->{
+        if(holder.MyBookingsItemView != null)
+            holder.MyBookingsItemView.cancelBtn.setOnClickListener((e)->{
             new ConfirmationDialogFragment(
                     "cancellata", e.getContext(),bookings, position, this)
                     .show(((AppCompatActivity)e.getContext()).getSupportFragmentManager(),"confirm");
         });
+        else
+            holder.bookingsItemView.cancelBtn.setOnClickListener((e)->{
+                new ConfirmationDialogFragment(
+                        "cancellata", e.getContext(),bookings, position, this)
+                        .show(((AppCompatActivity)e.getContext()).getSupportFragmentManager(),"confirm");
+            });
+        if(holder.MyBookingsItemView != null)
+            holder.MyBookingsItemView.completeBtn.setOnClickListener((e)->{
+                new ConfirmationDialogFragment(
+                        "effettuata", e.getContext(),bookings, position, this)
+                        .show(((AppCompatActivity)e.getContext()).getSupportFragmentManager(),"confirm");
 
-        holder.itemView.completeBtn.setOnClickListener((e)->{
-            new ConfirmationDialogFragment(
-                    "effettuata", e.getContext(),bookings, position, this)
-                    .show(((AppCompatActivity)e.getContext()).getSupportFragmentManager(),"confirm");
+            });
+        else
+            holder.bookingsItemView.completeBtn.setOnClickListener((e)->{
+                new ConfirmationDialogFragment(
+                        "effettuata", e.getContext(),bookings, position, this)
+                        .show(((AppCompatActivity)e.getContext()).getSupportFragmentManager(),"confirm");
 
-        });
+            });
 
     }
 
