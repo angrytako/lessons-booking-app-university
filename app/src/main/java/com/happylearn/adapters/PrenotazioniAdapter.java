@@ -1,15 +1,17 @@
 package com.happylearn.adapters;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.os.Bundle;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
-import androidx.databinding.ViewDataBinding;
+import androidx.fragment.app.DialogFragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.happylearn.R;
@@ -44,6 +46,46 @@ public class PrenotazioniAdapter extends
         }
     }
 
+    //allert dialog for confirmation of choice
+    public static class ConfirmationDialogFragment extends DialogFragment {
+        String action;
+        Context ctx;
+        List<BindablePrenotazione> bookings;
+        int position;
+        PrenotazioniAdapter adapter;
+
+        public ConfirmationDialogFragment(String action, Context ctx, List<BindablePrenotazione> bookings, int position, PrenotazioniAdapter adapter) {
+            this.action = action;
+            this.ctx = ctx;
+            this.bookings = bookings;
+            this.position = position;
+            this.adapter = adapter;
+        }
+
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+            // Use the Builder class for convenient dialog construction
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            builder.setMessage("La sua scelta potrebbe non essere reversibile. E' sicuro di voler procedere?")
+
+                    .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            // In case of no, don't do anything
+                        }
+                    })
+                    .setPositiveButton("Sì", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            Prenotazione newBooking = bookings.get(position).getSerializable();
+                            newBooking.setStato(action);
+                            ChangePrenotazioneRequest cp = new ChangePrenotazioneRequest(ctx, bookings,position,newBooking,adapter);
+                            cp.start();
+                        }
+                    });
+            // Create the AlertDialog object and return it
+            return builder.create();
+        }
+    }
+
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -66,18 +108,18 @@ public class PrenotazioniAdapter extends
         holder.itemView.setBooking(booking);
 
         //setting buttons event listeners
+        //each will have a confirmation dialog
         holder.itemView.cancelBtn.setOnClickListener((e)->{
-            Prenotazione newBooking = bookings.get(position).getSerializable();
-            newBooking.setStato("cancellata");
-            ChangePrenotazioneRequest cp = new ChangePrenotazioneRequest(e.getContext(), bookings,position,newBooking,this);
-            cp.start();
+            new ConfirmationDialogFragment(
+                    "cancellata", e.getContext(),bookings, position, this)
+                    .show(((AppCompatActivity)e.getContext()).getSupportFragmentManager(),"confirm");
         });
 
         holder.itemView.completeBtn.setOnClickListener((e)->{
-            Prenotazione newBooking = bookings.get(position).getSerializable();
-            newBooking.setStato("effettuata");
-            ChangePrenotazioneRequest cp = new ChangePrenotazioneRequest(e.getContext(), bookings,position,newBooking,this);
-            cp.start();
+            new ConfirmationDialogFragment(
+                    "effettuata", e.getContext(),bookings, position, this)
+                    .show(((AppCompatActivity)e.getContext()).getSupportFragmentManager(),"confirm");
+
         });
 
     }
