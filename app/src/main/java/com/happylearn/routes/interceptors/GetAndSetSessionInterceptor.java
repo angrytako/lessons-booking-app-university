@@ -1,5 +1,8 @@
 package com.happylearn.routes.interceptors;
 
+import android.app.Activity;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.util.Log;
 
 import com.happylearn.views.HappyLearnApplication;
@@ -12,9 +15,10 @@ import okhttp3.Response;
 
 public class GetAndSetSessionInterceptor implements Interceptor {
     HappyLearnApplication application;
-
-    public GetAndSetSessionInterceptor(HappyLearnApplication application) {
-        this.application = application;
+    Activity activity;
+    public GetAndSetSessionInterceptor(Activity activity) {
+        this.application =  (HappyLearnApplication)activity.getApplication();
+        this.activity = activity;
     }
 
     @Override
@@ -25,6 +29,8 @@ public class GetAndSetSessionInterceptor implements Interceptor {
         if(cookielist.size() == 1) {
             application.setSessionCookie((cookielist.get(0).split("="))[1]);
             Log.d("SESSION_HAPPY",cookielist.get(0));
+            SharedPreferences sharedPreferences = activity.getPreferences(activity.MODE_PRIVATE);
+            sharedPreferences.edit().putString("SESSION",(cookielist.get(0).split("="))[1]).apply();
         }
 
 

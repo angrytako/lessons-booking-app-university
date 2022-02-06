@@ -29,4 +29,9 @@ public interface Routes {
 
     @GET("Noodle_war/PrenotazioniServlet")
     Call<List<Prenotazione>> prenotazioni();
+
+    @GET("Noodle_war/LogoutServlet")
+    Call<SimpleMessage> logout();
+
+
 }

@@ -8,7 +8,9 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 
 import android.app.Activity;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -19,6 +21,8 @@ import com.happylearn.bindings.MenuController;
 import com.happylearn.dao.UserData;
 import com.happylearn.databinding.ActivityMainBinding;
 import com.happylearn.databinding.NavHeaderBinding;
+import com.happylearn.routes.GetMyInfoRequest;
+import com.happylearn.routes.LogoutRequest;
 
 public class MainActivity extends AppCompatActivity {
     ActivityMainBinding mBinding;
@@ -45,13 +49,23 @@ public class MainActivity extends AppCompatActivity {
                 .setReorderingAllowed(true)
                 .add(R.id.fragment_container, HomeFragment.class, null)
                 .commit();
-        //set initial userdata
-        //TODO network request for this one
         UserData startingData = new UserData("Guest","guest");
         ((HappyLearnApplication) this.getApplication()).setUserData(startingData);
 
         //bind this classe's view
         mBinding.setUserData(startingData);
+        //set initial userdata
+        //saved session cookie in local storage, if login was made
+        //call to retrieve session info
+        //sets all to guest if call fails
+        SharedPreferences sharedPreferences = getPreferences(MODE_PRIVATE);
+        String sessionCookie = sharedPreferences.getString("SESSION", null);
+        if(sessionCookie != null){
+            Log.d("HAPPY_SES",sessionCookie);
+            ((HappyLearnApplication)getApplication()).setSessionCookie(sessionCookie);
+            new GetMyInfoRequest(this,this).start();
+        }
+
 
         //Bind to header
         View hv = mBinding.navbarItemsNv.getHeaderView(0);
@@ -96,6 +110,16 @@ public class MainActivity extends AppCompatActivity {
                             .addToBackStack(null)
                             .remove(getSupportFragmentManager().getFragments().get(0))
                             .add(R.id.fragment_container, PrenotazioniFragment.class, null)
+                            .commit();
+                    break;
+                case R.id.logout_itm:
+                    new LogoutRequest(this).start();
+                    navbar.closeDrawers();
+                    getSupportFragmentManager().beginTransaction()
+                            .setReorderingAllowed(true)
+                            .addToBackStack(null)
+                            .remove(getSupportFragmentManager().getFragments().get(0))
+                            .add(R.id.fragment_container, HomeFragment.class, null)
                             .commit();
                     break;
             }
