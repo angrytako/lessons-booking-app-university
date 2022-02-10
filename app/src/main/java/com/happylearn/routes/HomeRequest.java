@@ -73,10 +73,43 @@ public class HomeRequest  implements Callback<List<Slot>> {
     public void onResponse(Call<List<Slot>> call, Response<List<Slot>> response) {
         if(response.isSuccessful()) {
             List<Slot> availableSlot = response.body();
+            int day =0;
+            int time =0;
+            if (availableSlot!=null)
+            {
+                if (availableSlot.size()!=0){
+                    day=availableSlot.get(0).getDay();
+                    time= availableSlot.get(0).getTime();
+                    ripetizioniHome.append("Giorno:"+day +"\n");
+                    ripetizioniHome.append("ora:"+time + "\n");
 
-            for (int i = 0; i < availableSlot.size(); i++) {
-                ripetizioniHome.append(availableSlot.get(i).getCourse() + "\n");
+                    for (int i = 0; i < availableSlot.size(); i++) {
+                        if(day!=availableSlot.get(i).getDay()) {
+                            day=availableSlot.get(i).getDay();
+                            ripetizioniHome.append("Giorno:" + day + "\n");
+                        }
+                        if(time!=availableSlot.get(i).getTime()) {
+                            time=availableSlot.get(i).getTime();
+                            ripetizioniHome.append("ora:" + time + "\n");
+                        }
+
+
+                        ripetizioniHome.append("corso:" + availableSlot.get(i).getCourse() +"\n");
+
+                        ripetizioniHome.append("Docenti:" + "\n");
+                        if(availableSlot.get(i).getTeacherList()!=null) {
+                            for (int j=0;j<availableSlot.get(i).getTeacherList().size();j++) {
+                                ripetizioniHome.append(availableSlot.get(i).getTeacherList().get(j) + " ");
+                            }
+                            ripetizioniHome.append("\n");
+                        }
+                        
+
+                    }
+                }
             }
+
+
 
             /*
             ArrayList<BindablePrenotazione> bindablePrenotazioni = new ArrayList<>();

@@ -35,6 +35,7 @@ public class Slot {
         return time;
     }
 
+
     @Override
     public String toString() {
         return "Slot{" +
