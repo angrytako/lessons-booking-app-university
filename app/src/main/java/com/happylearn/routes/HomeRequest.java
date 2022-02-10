@@ -25,22 +25,25 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class HomeRequest  implements Callback<List<Slot>> {
+public class HomeRequest implements Callback<List<Slot>> {
     private String BASE_URL;
     private Context context;
     private UserLogin userLogin;
     private Activity activity;
     private String username;
     private TextView ripetizioniHome;
+    private String role;
 
-    public HomeRequest(Context context, Activity activity, String username, TextView ripetizioniHome) {
+    public HomeRequest(Context context, Activity activity, String username, String role, TextView ripetizioniHome) {
         this.userLogin = userLogin;
         this.context = context;
         this.activity = activity;
         this.username = username;
         BASE_URL = context.getString(R.string.BASE_URL);
         this.ripetizioniHome = ripetizioniHome;
+        this.role = role;
     }
+
     public void start() {
         Gson gson = new GsonBuilder()
                 .setLenient()
@@ -68,44 +71,52 @@ public class HomeRequest  implements Callback<List<Slot>> {
     }
 
 
-
     @Override
     public void onResponse(Call<List<Slot>> call, Response<List<Slot>> response) {
-        if(response.isSuccessful()) {
+        if (response.isSuccessful()) {
+
             List<Slot> availableSlot = response.body();
-            int day =0;
-            int time =0;
-            if (availableSlot!=null)
-            {
-                if (availableSlot.size()!=0){
-                    day=availableSlot.get(0).getDay();
-                    time= availableSlot.get(0).getTime();
-                    ripetizioniHome.append("Giorno:"+day +"\n");
-                    ripetizioniHome.append("ora:"+time + "\n");
+            if (availableSlot != null) {
+                if (role.equals("cliente")) {
 
-                    for (int i = 0; i < availableSlot.size(); i++) {
-                        if(day!=availableSlot.get(i).getDay()) {
-                            day=availableSlot.get(i).getDay();
-                            ripetizioniHome.append("Giorno:" + day + "\n");
-                        }
-                        if(time!=availableSlot.get(i).getTime()) {
-                            time=availableSlot.get(i).getTime();
-                            ripetizioniHome.append("ora:" + time + "\n");
-                        }
+                    //servlet prenotazioni attive
+                    MiePrenotazioniHomeRequest prenotazioniController =
+                            new MiePrenotazioniHomeRequest(context, activity, username,availableSlot,ripetizioniHome);
+                    prenotazioniController.start();
 
+                } else {
+                    int day ;
+                    int time ;
+                    if (availableSlot.size() != 0) {
+                        day = availableSlot.get(0).getDay();
+                        time = availableSlot.get(0).getTime();
+                        ripetizioniHome.append("Giorno:" + day + "\n");
+                        ripetizioniHome.append("ora:" + time + "\n");
 
-                        ripetizioniHome.append("corso:" + availableSlot.get(i).getCourse() +"\n");
-
-                        ripetizioniHome.append("Docenti:" + "\n");
-                        if(availableSlot.get(i).getTeacherList()!=null) {
-                            for (int j=0;j<availableSlot.get(i).getTeacherList().size();j++) {
-                                ripetizioniHome.append(availableSlot.get(i).getTeacherList().get(j) + " ");
+                        for (int i = 0; i < availableSlot.size(); i++) {
+                            if (day != availableSlot.get(i).getDay()) {
+                                day = availableSlot.get(i).getDay();
+                                ripetizioniHome.append("Giorno:" + day + "\n");
                             }
-                            ripetizioniHome.append("\n");
-                        }
-                        
+                            if (time != availableSlot.get(i).getTime()) {
+                                time = availableSlot.get(i).getTime();
+                                ripetizioniHome.append("ora:" + time + "\n");
+                            }
 
+
+                            ripetizioniHome.append("corso:" + availableSlot.get(i).getCourse() + "\n");
+
+                            ripetizioniHome.append("Docenti:" + "\n");
+                            if (availableSlot.get(i).getTeacherList() != null) {
+                                for (int j = 0; j < availableSlot.get(i).getTeacherList().size(); j++) {
+                                    ripetizioniHome.append(availableSlot.get(i).getTeacherList().get(j) + " ");
+                                }
+                                ripetizioniHome.append("\n");
+                            }
+
+                        }
                     }
+
                 }
             }
 
@@ -126,7 +137,7 @@ public class HomeRequest  implements Callback<List<Slot>> {
             */
 
 
-        } else{
+        } else {
             try {
                 JSONObject jObjError = new JSONObject(response.errorBody().string());
                 Toast.makeText(context, jObjError.getString("error"), Toast.LENGTH_LONG).show();
@@ -139,12 +150,10 @@ public class HomeRequest  implements Callback<List<Slot>> {
 
     @Override
     public void onFailure(Call<List<Slot>> call, Throwable t) {
-        Log.d("NOODLE",  t.toString());
+        Log.d("NOODLE", t.toString());
         Toast.makeText(context, "errore inatteso", Toast.LENGTH_LONG).show();
         t.printStackTrace();
     }
-
-
 
 
 }

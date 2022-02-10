@@ -39,7 +39,9 @@ public class HomeFragment extends Fragment {
         //for performance gain
 
         String username = ((HappyLearnApplication)this.getActivity().getApplication()).getUserData().getUsername().get();
-        HomeRequest availableSlot = new HomeRequest(this.getContext(), this.getActivity(), username, ripetizioniHome);
+        String role = ((HappyLearnApplication)this.getActivity().getApplication()).getUserData().getRole().get();
+
+        HomeRequest availableSlot = new HomeRequest(this.getContext(), this.getActivity(), username,role, ripetizioniHome);
         availableSlot.start();
 
         //need this else since removing the fragment takes it away
