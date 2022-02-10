@@ -3,6 +3,7 @@ package com.happylearn.routes;
 import com.happylearn.dao.Prenotazione;
 import com.happylearn.dao.SimpleMessage;
 import com.happylearn.dao.SimpleUserData;
+import com.happylearn.dao.Slot;
 import com.happylearn.dao.UserLogin;
 
 import java.util.List;
@@ -33,5 +34,7 @@ public interface Routes {
     @GET("Noodle_war/LogoutServlet")
     Call<SimpleMessage> logout();
 
+    @GET("Noodle_war/AvailableSlotsServlet")
+    Call<List<Slot>> availableSlots();
 
 }

@@ -3,24 +3,19 @@ package com.happylearn.routes;
 import android.app.Activity;
 import android.content.Context;
 import android.util.Log;
+import android.widget.TextView;
 import android.widget.Toast;
-
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.happylearn.R;
-import com.happylearn.adapters.PrenotazioniAdapter;
-import com.happylearn.dao.BindablePrenotazione;
-import com.happylearn.dao.Prenotazione;
+import com.happylearn.dao.Slot;
 import com.happylearn.dao.UserLogin;
 import com.happylearn.routes.interceptors.SetSessionOnRequestInterceptor;
 import com.happylearn.views.HappyLearnApplication;
 
 import org.json.JSONObject;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import okhttp3.OkHttpClient;
@@ -30,23 +25,22 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class MiePrenotazioniRequest implements Callback<List<Prenotazione>> {
+public class HomeRequest  implements Callback<List<Slot>> {
     private String BASE_URL;
-    private  Context context;
+    private Context context;
     private UserLogin userLogin;
     private Activity activity;
     private String username;
-    private RecyclerView miePrenotazioni;
+    private TextView ripetizioniHome;
 
-    public MiePrenotazioniRequest(Context context, Activity activity, String username, RecyclerView miePrenotazioni) {
+    public HomeRequest(Context context, Activity activity, String username, TextView ripetizioniHome) {
         this.userLogin = userLogin;
         this.context = context;
         this.activity = activity;
         this.username = username;
         BASE_URL = context.getString(R.string.BASE_URL);
-        this.miePrenotazioni = miePrenotazioni;
+        this.ripetizioniHome = ripetizioniHome;
     }
-
     public void start() {
         Gson gson = new GsonBuilder()
                 .setLenient()
@@ -67,16 +61,22 @@ public class MiePrenotazioniRequest implements Callback<List<Prenotazione>> {
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .build();
         Routes gerritAPI = retrofit.create(Routes.class);
-        Call<List<Prenotazione>> call = gerritAPI.myPrenotazioni(username);
+        //TODO avaibleSlot richiede un argomento *forse*
+        Call<List<Slot>> call = gerritAPI.availableSlots();
         call.enqueue(this);
-
 
     }
 
+
+
     @Override
-    public void onResponse(Call<List<Prenotazione>> call, Response<List<Prenotazione>> response) {
+    public void onResponse(Call<List<Slot>> call, Response<List<Slot>> response) {
         if(response.isSuccessful()) {
-            List<Prenotazione> prenotazioni = response.body();
+            List<Slot> availableSlot = response.body();
+            System.out.println("*****************************************************************************************************************");
+            System.out.println(availableSlot);
+
+            /*
             ArrayList<BindablePrenotazione> bindablePrenotazioni = new ArrayList<>();
             for (Prenotazione p : prenotazioni)
                 bindablePrenotazioni.add(new BindablePrenotazione(p));
@@ -88,6 +88,9 @@ public class MiePrenotazioniRequest implements Callback<List<Prenotazione>> {
             miePrenotazioni.setAdapter(adapter);
             // Set layout manager to position the items
             miePrenotazioni.setLayoutManager(new LinearLayoutManager(context));
+            */
+
+
         } else{
             try {
                 JSONObject jObjError = new JSONObject(response.errorBody().string());
@@ -98,10 +101,15 @@ public class MiePrenotazioniRequest implements Callback<List<Prenotazione>> {
         }
     }
 
+
     @Override
-    public void onFailure(Call<List<Prenotazione>> call, Throwable t) {
+    public void onFailure(Call<List<Slot>> call, Throwable t) {
         Log.d("NOODLE",  t.toString());
         Toast.makeText(context, "errore inatteso", Toast.LENGTH_LONG).show();
         t.printStackTrace();
     }
+
+
+
+
 }
