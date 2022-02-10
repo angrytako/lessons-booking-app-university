@@ -73,6 +73,7 @@ public class PrenotazioniAdapter extends
             this.adapter = adapter;
         }
 
+        // are you sure? yes/no
         @Override
         public Dialog onCreateDialog(Bundle savedInstanceState) {
             // Use the Builder class for convenient dialog construction

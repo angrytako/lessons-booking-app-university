@@ -9,7 +9,8 @@ import java.util.List;
 
 public class HappyLearnApplication extends Application {
     private UserData userData;
-    private List<BindablePrenotazione> myBookings = null, bookings = null;
+    private List<BindablePrenotazione> myBookings = null;
+    private List<BindablePrenotazione> bookings = null;
     public UserData getUserData(){
         return userData;
     }

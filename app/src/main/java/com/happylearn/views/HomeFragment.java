@@ -14,12 +14,9 @@ import com.happylearn.R;
 import com.happylearn.routes.HomeRequest;
 
 public class HomeFragment extends Fragment {
-
-
     public HomeFragment() {
         // Required empty public constructor
     }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

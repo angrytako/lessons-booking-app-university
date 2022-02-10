@@ -73,8 +73,10 @@ public class HomeRequest  implements Callback<List<Slot>> {
     public void onResponse(Call<List<Slot>> call, Response<List<Slot>> response) {
         if(response.isSuccessful()) {
             List<Slot> availableSlot = response.body();
-            System.out.println("*****************************************************************************************************************");
-            System.out.println(availableSlot);
+
+            for (int i = 0; i < availableSlot.size(); i++) {
+                ripetizioniHome.append(availableSlot.get(i).getCourse() + "\n");
+            }
 
             /*
             ArrayList<BindablePrenotazione> bindablePrenotazioni = new ArrayList<>();
