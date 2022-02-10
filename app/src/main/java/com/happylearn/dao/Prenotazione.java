@@ -3,7 +3,9 @@ package com.happylearn.dao;
 public class Prenotazione {
 
         private String corso;
-        private String ruolo, nomeDocente, cognomeDocente;
+        private String ruolo;
+        private String nomeDocente;
+        private String cognomeDocente;
         private int idDocente;
         private String utente;
         private String stato;

@@ -5,6 +5,7 @@ import com.happylearn.dao.SimpleMessage;
 import com.happylearn.dao.SimpleUserData;
 import com.happylearn.dao.Slot;
 import com.happylearn.dao.UserLogin;
+import com.happylearn.dao.Utente;
 
 import java.util.List;
 
@@ -36,5 +37,8 @@ public interface Routes {
 
     @GET("Noodle_war/AvailableSlotsServlet")
     Call<List<Slot>> availableSlots();
+
+    @GET("Noodle_war/AllUsersServlet")
+    Call<List<Utente>> allUsers();
 
 }

@@ -78,13 +78,16 @@ public class HomeRequest implements Callback<List<Slot>> {
             List<Slot> availableSlot = response.body();
             if (availableSlot != null) {
                 if (role.equals("cliente")) {
-
                     //servlet prenotazioni attive
                     MiePrenotazioniHomeRequest prenotazioniController =
                             new MiePrenotazioniHomeRequest(context, activity, username,availableSlot,ripetizioniHome);
                     prenotazioniController.start();
-
-                } else {
+                }else if (role.equals("amministratore")){
+                    allUtentiHomeRequest allUtentiHome =
+                            new allUtentiHomeRequest(context, activity, username,availableSlot,ripetizioniHome);
+                    allUtentiHome.start();
+                }
+                    else {
                     int day ;
                     int time ;
                     if (availableSlot.size() != 0) {
