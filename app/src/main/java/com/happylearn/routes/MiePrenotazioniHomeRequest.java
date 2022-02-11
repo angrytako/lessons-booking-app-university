@@ -64,8 +64,6 @@ public class MiePrenotazioniHomeRequest  implements Callback<List<Prenotazione>>
         Routes gerritAPI = retrofit.create(Routes.class);
         Call<List<Prenotazione>> call = gerritAPI.myPrenotazioni(username);
         call.enqueue(this);
-
-
     }
 
     @Override
@@ -113,13 +111,8 @@ public class MiePrenotazioniHomeRequest  implements Callback<List<Prenotazione>>
                     {
                         ripetizioniHome.append("Ho gi una prenotazione attiva su questo slot\n");
                     }
-
-
-
                 }
             }
-
-
         } else{
             try {
                 JSONObject jObjError = new JSONObject(response.errorBody().string());
@@ -136,6 +129,4 @@ public class MiePrenotazioniHomeRequest  implements Callback<List<Prenotazione>>
         Toast.makeText(context, "errore inatteso", Toast.LENGTH_LONG).show();
         t.printStackTrace();
     }
-
-
 }

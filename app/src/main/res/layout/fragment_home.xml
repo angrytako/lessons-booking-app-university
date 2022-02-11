@@ -4,48 +4,62 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
-<TextView
-    android:id="@+id/ripetizioniHome"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:textSize="20sp"
-    android:text="HOME."/>
 
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tabName"
         android:layout_width="409dp"
         android:layout_height="76dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="2dp"
+        android:clickable="true"
+        android:focusable="true"
+        android:onClick="homeClick"
+        app:tabTextAppearance="@style/TabLayoutStyle"
         app:layout_constraintEnd_toEndOf="parent"
-        tools:layout_editor_absoluteY="74dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:tabMode="scrollable"
         tools:ignore="MissingConstraints">
 
         <com.google.android.material.tabs.TabItem
+            android:id="@+id/monday"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Lunedì" />
 
         <com.google.android.material.tabs.TabItem
+            android:id="@+id/tuesday"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Martedì" />
 
         <com.google.android.material.tabs.TabItem
+            android:id="@+id/wednesady"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Mercoledì" />
 
         <com.google.android.material.tabs.TabItem
+            android:id="@+id/thursday"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Giovedì" />
 
         <com.google.android.material.tabs.TabItem
+            android:id="@+id/froiday"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Venerdì" />
     </com.google.android.material.tabs.TabLayout>
-<!--    -->
-<!--    <androidx.vi-->
 
+    <TextView
+        android:id="@+id/ripetizioniHome"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:text="HOME."
+        android:scrollbars="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tabName" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

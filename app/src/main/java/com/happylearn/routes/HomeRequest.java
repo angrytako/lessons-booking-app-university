@@ -2,10 +2,12 @@ package com.happylearn.routes;
 
 import android.app.Activity;
 import android.content.Context;
+import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.material.tabs.TabLayout;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.happylearn.R;
@@ -13,11 +15,8 @@ import com.happylearn.dao.Slot;
 import com.happylearn.dao.UserLogin;
 import com.happylearn.routes.interceptors.SetSessionOnRequestInterceptor;
 import com.happylearn.views.HappyLearnApplication;
-
 import org.json.JSONObject;
-
 import java.util.List;
-
 import okhttp3.OkHttpClient;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -31,16 +30,19 @@ public class HomeRequest implements Callback<List<Slot>> {
     private UserLogin userLogin;
     private Activity activity;
     private String username;
-    private TextView ripetizioniHome;
+    private TextView textViewHome;
+    private TabLayout tabHome;
     private String role;
+    private List<Slot> availableSlot;
 
-    public HomeRequest(Context context, Activity activity, String username, String role, TextView ripetizioniHome) {
+    public HomeRequest(Context context, Activity activity, String username, String role, TextView textViewHome, TabLayout tabLayout) {
         this.userLogin = userLogin;
         this.context = context;
         this.activity = activity;
         this.username = username;
         BASE_URL = context.getString(R.string.BASE_URL);
-        this.ripetizioniHome = ripetizioniHome;
+        this.textViewHome = textViewHome;
+        this.tabHome = tabLayout;
         this.role = role;
     }
 
@@ -74,56 +76,25 @@ public class HomeRequest implements Callback<List<Slot>> {
     @Override
     public void onResponse(Call<List<Slot>> call, Response<List<Slot>> response) {
         if (response.isSuccessful()) {
+            textViewHome.setMovementMethod(new ScrollingMovementMethod());
 
-            List<Slot> availableSlot = response.body();
-            if (availableSlot != null) {
-                if (role.equals("cliente")) {
-                    //servlet prenotazioni attive
-                    MiePrenotazioniHomeRequest prenotazioniController =
-                            new MiePrenotazioniHomeRequest(context, activity, username,availableSlot,ripetizioniHome);
-                    prenotazioniController.start();
-                }else if (role.equals("amministratore")){
-                    allUtentiHomeRequest allUtentiHome =
-                            new allUtentiHomeRequest(context, activity, username,availableSlot,ripetizioniHome);
-                    allUtentiHome.start();
+            saveAvailableSlots(response);
+
+            viewBookingsOfDay(0);
+
+            tabHome.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+                @Override
+                public void onTabSelected(TabLayout.Tab tab) {
+                    viewBookingsOfDay(tab.getPosition());
+//                    Toast.makeText(context, "hai cliccato: " + tab.getPosition(), Toast.LENGTH_SHORT).show();
                 }
-                    else {
-                    int day ;
-                    int time ;
-                    if (availableSlot.size() != 0) {
-                        day = availableSlot.get(0).getDay();
-                        time = availableSlot.get(0).getTime();
-                        ripetizioniHome.append("Giorno:" + day + "\n");
-                        ripetizioniHome.append("ora:" + time + "\n");
 
-                        for (int i = 0; i < availableSlot.size(); i++) {
-                            if (day != availableSlot.get(i).getDay()) {
-                                day = availableSlot.get(i).getDay();
-                                ripetizioniHome.append("Giorno:" + day + "\n");
-                            }
-                            if (time != availableSlot.get(i).getTime()) {
-                                time = availableSlot.get(i).getTime();
-                                ripetizioniHome.append("ora:" + time + "\n");
-                            }
+                @Override
+                public void onTabUnselected(TabLayout.Tab tab) { }
 
-
-                            ripetizioniHome.append("corso:" + availableSlot.get(i).getCourse() + "\n");
-
-                            ripetizioniHome.append("Docenti:" + "\n");
-                            if (availableSlot.get(i).getTeacherList() != null) {
-                                for (int j = 0; j < availableSlot.get(i).getTeacherList().size(); j++) {
-                                    ripetizioniHome.append(availableSlot.get(i).getTeacherList().get(j) + " ");
-                                }
-                                ripetizioniHome.append("\n");
-                            }
-
-                        }
-                    }
-
-                }
-            }
-
-
+                @Override
+                public void onTabReselected(TabLayout.Tab tab) { }
+            });
 
             /*
             ArrayList<BindablePrenotazione> bindablePrenotazioni = new ArrayList<>();
@@ -150,6 +121,19 @@ public class HomeRequest implements Callback<List<Slot>> {
         }
     }
 
+    private void saveAvailableSlots(Response<List<Slot>> response) {
+        availableSlot = response.body();
+        if (availableSlot != null) {
+            if (role.equals("cliente")) {
+                //servlet prenotazioni attive
+                MiePrenotazioniHomeRequest prenotazioniController = new MiePrenotazioniHomeRequest(context, activity, username,availableSlot, textViewHome);
+                prenotazioniController.start();
+            }else if (role.equals("amministratore")){
+                allUtentiHomeRequest allUtentiHome = new allUtentiHomeRequest(context, activity, username,availableSlot, textViewHome);
+                allUtentiHome.start();
+            }
+        }
+    }
 
     @Override
     public void onFailure(Call<List<Slot>> call, Throwable t) {
@@ -158,5 +142,33 @@ public class HomeRequest implements Callback<List<Slot>> {
         t.printStackTrace();
     }
 
+    private void viewBookingsOfDay(int day) {
+        Toast.makeText(context, "dovrei visualizzare le prenotazioni del giorno: " + day, Toast.LENGTH_SHORT).show();
+        int time ;
 
+        if (availableSlot.size() != 0) {
+            //day = availableSlot.get(0).getDay();
+            time = availableSlot.get(0).getTime();
+            textViewHome.append("Giorno:" + day + "\n");
+            textViewHome.append("Ora:" + time + "\n");
+
+            for (int i = 0; i < availableSlot.size(); i++) {
+                if (day == availableSlot.get(i).getDay()) {
+                    if (time != availableSlot.get(i).getTime()) {
+                        time = availableSlot.get(i).getTime();
+                        textViewHome.append("Ora:" + time + "\n");
+                    }
+                    textViewHome.append("Corso:" + availableSlot.get(i).getCourse() + "\n");
+
+                    textViewHome.append("con Docenti:" + "\n");
+                    if (availableSlot.get(i).getTeacherList() != null) {
+                        for (int j = 0; j < availableSlot.get(i).getTeacherList().size(); j++) {
+                            textViewHome.append(availableSlot.get(i).getTeacherList().get(j) + " ");
+                        }
+                        textViewHome.append("\n");
+                    }
+                }
+            }
+        }
+    }
 }
