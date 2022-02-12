@@ -11,12 +11,17 @@ import com.google.android.material.tabs.TabLayout;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.happylearn.R;
+import com.happylearn.dao.Docente;
 import com.happylearn.dao.Slot;
 import com.happylearn.dao.UserLogin;
 import com.happylearn.routes.interceptors.SetSessionOnRequestInterceptor;
 import com.happylearn.views.HappyLearnApplication;
+
 import org.json.JSONObject;
+
+import java.util.ArrayList;
 import java.util.List;
+
 import okhttp3.OkHttpClient;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -33,7 +38,6 @@ public class HomeRequest implements Callback<List<Slot>> {
     private TextView textViewHome;
     private TabLayout tabHome;
     private String role;
-    private List<Slot> availableSlot;
 
     public HomeRequest(Context context, Activity activity, String username, String role, TextView textViewHome, TabLayout tabLayout) {
         this.userLogin = userLogin;
@@ -78,37 +82,45 @@ public class HomeRequest implements Callback<List<Slot>> {
         if (response.isSuccessful()) {
             textViewHome.setMovementMethod(new ScrollingMovementMethod());
 
-            saveAvailableSlots(response);
+            List<Slot> availableSlot = response.body();
 
-            viewBookingsOfDay(0);
+            if (availableSlot != null) {
+                List<List<List<Slot>>> availableSlotsForDayandTime = trasformSlotToSlotForDayAndTime(availableSlot);
 
-            tabHome.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-                @Override
-                public void onTabSelected(TabLayout.Tab tab) {
-                    viewBookingsOfDay(tab.getPosition());
+                if (role.equals("cliente")) {
+                    //servlet prenotazioni attive
+                    MiePrenotazioniHomeRequest prenotazioniController =
+                            new MiePrenotazioniHomeRequest(context, activity, username, availableSlotsForDayandTime, textViewHome);
+                    prenotazioniController.start();
+                } else if (role.equals("amministratore")) {
+                    allUtentiHomeRequest allUtentiHome =
+                            new allUtentiHomeRequest(context, activity, username, availableSlotsForDayandTime, textViewHome);
+                    allUtentiHome.start();
+                } else {
+
+                    viewBooking(availableSlotsForDayandTime.get(0),0);
+
+
+                    tabHome.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+                        @Override
+                        public void onTabSelected(TabLayout.Tab tab) {
+                            viewBooking(availableSlotsForDayandTime.get(tab.getPosition()),tab.getPosition());
 //                    Toast.makeText(context, "hai cliccato: " + tab.getPosition(), Toast.LENGTH_SHORT).show();
+                        }
+
+                        @Override
+                        public void onTabUnselected(TabLayout.Tab tab) {
+
+                        }
+
+                        @Override
+                        public void onTabReselected(TabLayout.Tab tab) {
+                        }
+                    });
                 }
 
-                @Override
-                public void onTabUnselected(TabLayout.Tab tab) { }
 
-                @Override
-                public void onTabReselected(TabLayout.Tab tab) { }
-            });
-
-            /*
-            ArrayList<BindablePrenotazione> bindablePrenotazioni = new ArrayList<>();
-            for (Prenotazione p : prenotazioni)
-                bindablePrenotazioni.add(new BindablePrenotazione(p));
-            ((HappyLearnApplication)activity.getApplication()).setMyBookings(bindablePrenotazioni);
-            // Create adapter passing in the sample user data
-            PrenotazioniAdapter adapter = new PrenotazioniAdapter( ((HappyLearnApplication)activity.getApplication()).getMyBookings(), "myBookings");
-
-            // Attach the adapter to the recyclerview to populate items
-            miePrenotazioni.setAdapter(adapter);
-            // Set layout manager to position the items
-            miePrenotazioni.setLayoutManager(new LinearLayoutManager(context));
-            */
+            }
 
 
         } else {
@@ -121,19 +133,8 @@ public class HomeRequest implements Callback<List<Slot>> {
         }
     }
 
-    private void saveAvailableSlots(Response<List<Slot>> response) {
-        availableSlot = response.body();
-        if (availableSlot != null) {
-            if (role.equals("cliente")) {
-                //servlet prenotazioni attive
-                MiePrenotazioniHomeRequest prenotazioniController = new MiePrenotazioniHomeRequest(context, activity, username,availableSlot, textViewHome);
-                prenotazioniController.start();
-            }else if (role.equals("amministratore")){
-                allUtentiHomeRequest allUtentiHome = new allUtentiHomeRequest(context, activity, username,availableSlot, textViewHome);
-                allUtentiHome.start();
-            }
-        }
-    }
+
+
 
     @Override
     public void onFailure(Call<List<Slot>> call, Throwable t) {
@@ -142,33 +143,111 @@ public class HomeRequest implements Callback<List<Slot>> {
         t.printStackTrace();
     }
 
-    private void viewBookingsOfDay(int day) {
-        Toast.makeText(context, "dovrei visualizzare le prenotazioni del giorno: " + day, Toast.LENGTH_SHORT).show();
-        int time ;
 
-        if (availableSlot.size() != 0) {
-            //day = availableSlot.get(0).getDay();
-            time = availableSlot.get(0).getTime();
-            textViewHome.append("Giorno:" + day + "\n");
-            textViewHome.append("Ora:" + time + "\n");
 
-            for (int i = 0; i < availableSlot.size(); i++) {
-                if (day == availableSlot.get(i).getDay()) {
-                    if (time != availableSlot.get(i).getTime()) {
-                        time = availableSlot.get(i).getTime();
-                        textViewHome.append("Ora:" + time + "\n");
-                    }
-                    textViewHome.append("Corso:" + availableSlot.get(i).getCourse() + "\n");
+    private void viewBooking(List<List<Slot>> slotForTime,int day) {
+        textViewHome.setText("Ripetizioni disponibili di:"+dayToString(day));
 
-                    textViewHome.append("con Docenti:" + "\n");
-                    if (availableSlot.get(i).getTeacherList() != null) {
-                        for (int j = 0; j < availableSlot.get(i).getTeacherList().size(); j++) {
-                            textViewHome.append(availableSlot.get(i).getTeacherList().get(j) + " ");
-                        }
-                        textViewHome.append("\n");
-                    }
+        for(int i=0;i<slotForTime.size();i++){
+            textViewHome.append(timeToString(i) + "\n");
+            for (Slot slot : slotForTime.get(i)){
+                textViewHome.append(slot.getCourse() +"\n");
+                for (Docente docente : slot.getTeacherList()){
+                    textViewHome.append("("+ docente.getId()+") " + docente.getNome() + " " + docente.getCognome() + "\n");
                 }
             }
+
+        }
+
+
+
+    }
+
+    /**
+     * get a List of Slot and return the same Slot divided in to List of Day -> time -> slot
+     * @param availableSlot
+     * @return list of List-Day -> List-time -> List-slot
+     */
+    public static List<List<List<Slot>>> trasformSlotToSlotForDayAndTime(List<Slot> availableSlot) {
+        List<List<List<Slot>>> availableSlotsForDayandTime = new ArrayList(5);
+        for (int i=0;i<5;i++){
+            List<List<Slot>> ora = new ArrayList<>(4);
+            for (int j=0;j<4;j++) {
+                ora.add(j,new ArrayList<Slot>());
+            }
+            availableSlotsForDayandTime.add(i,ora);
+        }
+
+        int day =0;
+        int time =0;
+        if (availableSlot.size() != 0) {
+            for(Slot slot : availableSlot){
+                if (day != slot.getDay()) {
+                    day = slot.getDay();
+                }
+                if (time != slot.getTime()) {
+                    time = slot.getTime();
+                }
+                availableSlotsForDayandTime.get(day).get(time).add(slot);
+            }
+        }
+
+
+        return availableSlotsForDayandTime;
+    }
+
+    /**
+     * Association the number DAY to it String DAY
+     * @param day
+     * @return
+     */
+    public static String dayToString (int day){
+        switch (day){
+            case 0: return "Lundedì";
+            case 1: return "Martedì";
+            case 2: return "Mercoledì";
+            case 3: return "Giovedì";
+            case 4: return "Venerdì";
+            default: return "Error Day";
+        }
+    }
+
+    /**
+     * Association the number TIME to it String Time
+     * @param time
+     * @return
+     */
+    public static String timeToString (int time){
+        switch (time){
+            case 0: return "16:00 -> 17:00";
+            case 1: return "17:00 -> 18:00";
+            case 2: return "18:00 -> 19:00";
+            case 3: return "19:00 -> 20:00";
+            default: return "Error Time";
         }
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

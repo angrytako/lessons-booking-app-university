@@ -25,19 +25,19 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class MiePrenotazioniHomeRequest  implements Callback<List<Prenotazione>> {
+public class MiePrenotazioniHomeRequest implements Callback<List<Prenotazione>> {
     private String BASE_URL;
     private Context context;
     private Activity activity;
     private String username;
-    private List<Slot> availableSlot;
+    private List<List<List<Slot>>> availableSlotsForDayandTime;
     private TextView ripetizioniHome;
 
-    public MiePrenotazioniHomeRequest(Context context, Activity activity, String username, List<Slot> availableSlot, TextView ripetizioniHome) {
+    public MiePrenotazioniHomeRequest(Context context, Activity activity, String username, List<List<List<Slot>>> availableSlotsForDayandTime, TextView ripetizioniHome) {
         this.context = context;
         this.activity = activity;
         this.username = username;
-        this.availableSlot = availableSlot;
+        this.availableSlotsForDayandTime = availableSlotsForDayandTime;
         this.ripetizioniHome = ripetizioniHome;
         BASE_URL = context.getString(R.string.BASE_URL);
     }
@@ -68,11 +68,12 @@ public class MiePrenotazioniHomeRequest  implements Callback<List<Prenotazione>>
 
     @Override
     public void onResponse(Call<List<Prenotazione>> call, Response<List<Prenotazione>> response) {
-        if(response.isSuccessful()) {
+        if (response.isSuccessful()) {
             List<Prenotazione> prenotazioni = response.body();
-            int day ;
-            int time ;
-            if (availableSlot.size() != 0) {
+            int day;
+            int time;
+            if (availableSlotsForDayandTime.size() != 0) {
+                /*
                 day = availableSlot.get(0).getDay();
                 time = availableSlot.get(0).getTime();
                 ripetizioniHome.append("Giorno:" + day + "\n");
@@ -105,15 +106,18 @@ public class MiePrenotazioniHomeRequest  implements Callback<List<Prenotazione>>
                             }
                             ripetizioniHome.append("\n");
                         }
-                        */
+
 
                     }else
                     {
                         ripetizioniHome.append("Ho gi una prenotazione attiva su questo slot\n");
                     }
                 }
+            */
             }
-        } else{
+
+
+        } else {
             try {
                 JSONObject jObjError = new JSONObject(response.errorBody().string());
                 Toast.makeText(context, jObjError.getString("error"), Toast.LENGTH_LONG).show();
@@ -125,7 +129,7 @@ public class MiePrenotazioniHomeRequest  implements Callback<List<Prenotazione>>
 
     @Override
     public void onFailure(Call<List<Prenotazione>> call, Throwable t) {
-        Log.d("NOODLE",  t.toString());
+        Log.d("NOODLE", t.toString());
         Toast.makeText(context, "errore inatteso", Toast.LENGTH_LONG).show();
         t.printStackTrace();
     }

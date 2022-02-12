@@ -30,6 +30,7 @@ public class HomeFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
         // Lookup the recyclerview in activity layout
         TextView ripetizioniHome = (TextView) view.findViewById(R.id.ripetizioniHome);
         TabLayout tabLayout = (TabLayout) view.findViewById(R.id.tabName);

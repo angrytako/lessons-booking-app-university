@@ -31,14 +31,14 @@ private String BASE_URL;
 private Context context;
 private Activity activity;
 private String username;
-private List<Slot> availableSlot;
+private List<List<List<Slot>>> availableSlotsForDayandTime;
 private TextView ripetizioniHome;
 
-    public allUtentiHomeRequest(Context context, Activity activity, String username, List<Slot> availableSlot, TextView ripetizioniHome) {
+    public allUtentiHomeRequest(Context context, Activity activity, String username,  List<List<List<Slot>>> availableSlotsForDayandTime, TextView ripetizioniHome) {
         this.context = context;
         this.activity = activity;
         this.username = username;
-        this.availableSlot = availableSlot;
+        this.availableSlotsForDayandTime = availableSlotsForDayandTime;
         this.ripetizioniHome = ripetizioniHome;
         BASE_URL = context.getString(R.string.BASE_URL);
     }
@@ -75,7 +75,7 @@ private TextView ripetizioniHome;
             List<Utente> utenti = response.body();
 
             allPrenotazioniHomeRequest allPrenotazioniHome =
-                    new allPrenotazioniHomeRequest(context, activity, username,availableSlot,ripetizioniHome,utenti);
+                    new allPrenotazioniHomeRequest(context, activity, username,availableSlotsForDayandTime,ripetizioniHome,utenti);
             allPrenotazioniHome.start();
         }
 

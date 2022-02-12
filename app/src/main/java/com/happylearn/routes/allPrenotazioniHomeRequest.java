@@ -31,17 +31,17 @@ public class allPrenotazioniHomeRequest implements Callback<List<Prenotazione>> 
     private Context context;
     private Activity activity;
     private String username;
-    private List<Slot> availableSlot;
+    private List<List<List<Slot>>> availableSlotsForDayandTime;
     private TextView ripetizioniHome;
     private List<Utente> utenti;
 
     public allPrenotazioniHomeRequest(Context context, Activity activity, String username,
-                                      List<Slot> availableSlot, TextView ripetizioniHome,
+                                      List<List<List<Slot>>> availableSlotsForDayandTime, TextView ripetizioniHome,
                                       List<Utente> utenti) {
         this.context = context;
         this.activity = activity;
         this.username = username;
-        this.availableSlot = availableSlot;
+        this.availableSlotsForDayandTime = availableSlotsForDayandTime;
         this.ripetizioniHome = ripetizioniHome;
         this.utenti = utenti;
         BASE_URL = context.getString(R.string.BASE_URL);
@@ -81,10 +81,11 @@ public class allPrenotazioniHomeRequest implements Callback<List<Prenotazione>> 
             //this.availableSlot this.utenti
             //testati ed arrivano i dati competi
 
-
+/*
             int day ;
             int time ;
             if (availableSlot.size() != 0) {
+
                 day = availableSlot.get(0).getDay();
                 time = availableSlot.get(0).getTime();
                 ripetizioniHome.append("Giorno:" + day + "\n");
@@ -128,14 +129,14 @@ public class allPrenotazioniHomeRequest implements Callback<List<Prenotazione>> 
                     {
                        // ripetizioniHome.append("Ho gi una prenotazione attiva su questo slot\n");
                     }
-                */
+
 
 
                 }
             }
 
 
-
+*/
 
 
         }else {
