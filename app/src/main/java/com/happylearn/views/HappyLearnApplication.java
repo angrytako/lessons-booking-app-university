@@ -3,6 +3,7 @@ package com.happylearn.views;
 import android.app.Application;
 
 import com.happylearn.dao.BindablePrenotazione;
+import com.happylearn.dao.Slot;
 import com.happylearn.dao.UserData;
 
 import java.util.List;
@@ -15,6 +16,8 @@ public class HappyLearnApplication extends Application {
         return userData;
     }
     private String sessionCookie = null;
+    private Slot slot = null;
+
     public void setUserData(UserData userData){
         this.userData = userData;
     }
@@ -41,5 +44,13 @@ public class HappyLearnApplication extends Application {
 
     public void setSessionCookie(String sessionCookie) {
         this.sessionCookie = sessionCookie;
+    }
+
+    public Slot getSlot() {
+        return slot;
+    }
+
+    public void setSlot(Slot slot) {
+        this.slot = slot;
     }
 }

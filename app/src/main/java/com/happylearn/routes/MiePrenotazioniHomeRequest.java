@@ -162,6 +162,7 @@ public class MiePrenotazioniHomeRequest implements Callback<List<Prenotazione>> 
         for(int i=0;i<slotForTime.size();i++){
             ripetizioniHome.append(HomeRequest.timeToString(i) +" -------------------------------------------------\n");
             for (Slot slot : slotForTime.get(i)){
+
                 Boolean flagJustExistReservation = false;
                 Prenotazione prenotazione =null;
                 for (Prenotazione p : prenotazioni){
@@ -172,6 +173,7 @@ public class MiePrenotazioniHomeRequest implements Callback<List<Prenotazione>> 
                 }
                 if (flagJustExistReservation == false){
                     ripetizioniHome.append(slot.getCourse() +"\n");
+
                     for (Docente docente : slot.getTeacherList()){
                         ripetizioniHome.append("("+ docente.getId()+") " + docente.getNome() + " " + docente.getCognome() + "\n");
                     }

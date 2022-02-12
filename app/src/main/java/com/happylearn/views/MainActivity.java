@@ -1,12 +1,5 @@
 package com.happylearn.views;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBarDrawerToggle;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.databinding.DataBindingUtil;
-import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.fragment.app.Fragment;
-
 import android.app.Activity;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -14,6 +7,13 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.databinding.DataBindingUtil;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.Fragment;
 
 import com.google.android.material.navigation.NavigationView;
 import com.happylearn.R;
@@ -82,7 +82,7 @@ public class MainActivity extends AppCompatActivity {
                             .setReorderingAllowed(true)
                             .addToBackStack(null)
                             .remove(getSupportFragmentManager().getFragments().get(0))
-                            .add(R.id.fragment_container, HomeFragment.class, null)
+                            .add(R.id.fragment_container, EffettuaPrenotazioneFragment.class, null)
                             .commit();
                     break;
                 case R.id.login_itm:
