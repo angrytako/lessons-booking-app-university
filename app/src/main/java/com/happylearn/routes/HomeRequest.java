@@ -90,11 +90,11 @@ public class HomeRequest implements Callback<List<Slot>> {
                 if (role.equals("cliente")) {
                     //servlet prenotazioni attive
                     MiePrenotazioniHomeRequest prenotazioniController =
-                            new MiePrenotazioniHomeRequest(context, activity, username, availableSlotsForDayandTime, textViewHome);
+                            new MiePrenotazioniHomeRequest(context, activity, username, availableSlotsForDayandTime, textViewHome,tabHome);
                     prenotazioniController.start();
                 } else if (role.equals("amministratore")) {
                     allUtentiHomeRequest allUtentiHome =
-                            new allUtentiHomeRequest(context, activity, username, availableSlotsForDayandTime, textViewHome);
+                            new allUtentiHomeRequest(context, activity, username, availableSlotsForDayandTime, textViewHome,tabHome);
                     allUtentiHome.start();
                 } else {
 
@@ -105,17 +105,11 @@ public class HomeRequest implements Callback<List<Slot>> {
                         @Override
                         public void onTabSelected(TabLayout.Tab tab) {
                             viewBooking(availableSlotsForDayandTime.get(tab.getPosition()),tab.getPosition());
-//                    Toast.makeText(context, "hai cliccato: " + tab.getPosition(), Toast.LENGTH_SHORT).show();
                         }
-
                         @Override
-                        public void onTabUnselected(TabLayout.Tab tab) {
-
-                        }
-
+                        public void onTabUnselected(TabLayout.Tab tab) { }
                         @Override
-                        public void onTabReselected(TabLayout.Tab tab) {
-                        }
+                        public void onTabReselected(TabLayout.Tab tab) { }
                     });
                 }
 
@@ -146,10 +140,10 @@ public class HomeRequest implements Callback<List<Slot>> {
 
 
     private void viewBooking(List<List<Slot>> slotForTime,int day) {
-        textViewHome.setText("Ripetizioni disponibili di:"+dayToString(day));
+        textViewHome.setText("Ripetizioni disponibili di:"+dayToString(day) +"\n");
 
         for(int i=0;i<slotForTime.size();i++){
-            textViewHome.append(timeToString(i) + "\n");
+            textViewHome.append(timeToString(i) + " -------------------------------------------------\n");
             for (Slot slot : slotForTime.get(i)){
                 textViewHome.append(slot.getCourse() +"\n");
                 for (Docente docente : slot.getTeacherList()){
@@ -158,7 +152,6 @@ public class HomeRequest implements Callback<List<Slot>> {
             }
 
         }
-
 
 
     }

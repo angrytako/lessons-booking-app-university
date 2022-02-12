@@ -6,6 +6,7 @@ import android.util.Log;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.material.tabs.TabLayout;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.happylearn.R;
@@ -33,14 +34,17 @@ private Activity activity;
 private String username;
 private List<List<List<Slot>>> availableSlotsForDayandTime;
 private TextView ripetizioniHome;
+private TabLayout tabHome;
 
-    public allUtentiHomeRequest(Context context, Activity activity, String username,  List<List<List<Slot>>> availableSlotsForDayandTime, TextView ripetizioniHome) {
+    public allUtentiHomeRequest(Context context, Activity activity, String username,  List<List<List<Slot>>> availableSlotsForDayandTime,
+                                TextView ripetizioniHome,TabLayout tabHome) {
         this.context = context;
         this.activity = activity;
         this.username = username;
         this.availableSlotsForDayandTime = availableSlotsForDayandTime;
         this.ripetizioniHome = ripetizioniHome;
         BASE_URL = context.getString(R.string.BASE_URL);
+        this.tabHome=tabHome;
     }
 
     public void start() {
@@ -75,13 +79,9 @@ private TextView ripetizioniHome;
             List<Utente> utenti = response.body();
 
             allPrenotazioniHomeRequest allPrenotazioniHome =
-                    new allPrenotazioniHomeRequest(context, activity, username,availableSlotsForDayandTime,ripetizioniHome,utenti);
+                    new allPrenotazioniHomeRequest(context, activity, username,availableSlotsForDayandTime,ripetizioniHome,utenti,tabHome);
             allPrenotazioniHome.start();
         }
-
-
-
-
 
 
         else{

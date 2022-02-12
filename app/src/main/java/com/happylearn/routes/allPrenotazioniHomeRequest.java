@@ -6,6 +6,7 @@ import android.util.Log;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.material.tabs.TabLayout;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.happylearn.R;
@@ -34,10 +35,10 @@ public class allPrenotazioniHomeRequest implements Callback<List<Prenotazione>> 
     private List<List<List<Slot>>> availableSlotsForDayandTime;
     private TextView ripetizioniHome;
     private List<Utente> utenti;
-
+    private TabLayout tabHome;
     public allPrenotazioniHomeRequest(Context context, Activity activity, String username,
                                       List<List<List<Slot>>> availableSlotsForDayandTime, TextView ripetizioniHome,
-                                      List<Utente> utenti) {
+                                      List<Utente> utenti, TabLayout tabHome) {
         this.context = context;
         this.activity = activity;
         this.username = username;
@@ -45,6 +46,7 @@ public class allPrenotazioniHomeRequest implements Callback<List<Prenotazione>> 
         this.ripetizioniHome = ripetizioniHome;
         this.utenti = utenti;
         BASE_URL = context.getString(R.string.BASE_URL);
+        this.tabHome=tabHome;
 
     }
 
@@ -78,66 +80,9 @@ public class allPrenotazioniHomeRequest implements Callback<List<Prenotazione>> 
     public void onResponse(Call<List<Prenotazione>> call, Response<List<Prenotazione>> response) {
         if(response.isSuccessful()) {
             List<Prenotazione> allPrenotazioni = response.body();
-            //this.availableSlot this.utenti
+            //this.availableSlotsForDayandTime    this.utenti
             //testati ed arrivano i dati competi
-
-/*
-            int day ;
-            int time ;
-            if (availableSlot.size() != 0) {
-
-                day = availableSlot.get(0).getDay();
-                time = availableSlot.get(0).getTime();
-                ripetizioniHome.append("Giorno:" + day + "\n");
-                ripetizioniHome.append("ora:" + time + "\n");
-
-                for (int i = 0; i < availableSlot.size(); i++) {
-                    if (day != availableSlot.get(i).getDay()) {
-                        day = availableSlot.get(i).getDay();
-                        ripetizioniHome.append("Giorno:" + day + "\n");
-                    }
-                    if (time != availableSlot.get(i).getTime()) {
-                        time = availableSlot.get(i).getTime();
-                        ripetizioniHome.append("ora:" + time + "\n");
-                    }
-
-                    //TODO logica visualizzazione di utenti e lezioni
-                    /*
-                    for (Utente u : this.utenti){
-
-                    }
-
-                    Boolean flagJustExistReservation = false;
-                    for (Prenotazione p : allPrenotazioni){
-                        if (p.getGiorno()==day && p.getOrario()==time && !p.getStato().equals("cancellata")) flagJustExistReservation=true;
-                    }
-
-                    if (flagJustExistReservation == false){
-
-                        ripetizioniHome.append("corso:" + availableSlot.get(i).getCourse() + "\n");
-
-                        ripetizioniHome.append("Docenti:" + "\n");
-                        if (availableSlot.get(i).getTeacherList() != null) {
-                            for (int j = 0; j < availableSlot.get(i).getTeacherList().size(); j++) {
-                                ripetizioniHome.append(availableSlot.get(i).getTeacherList().get(j) + " ");
-                            }
-                            ripetizioniHome.append("\n");
-                        }
-
-
-                    }else
-                    {
-                       // ripetizioniHome.append("Ho gi una prenotazione attiva su questo slot\n");
-                    }
-
-
-
-                }
-            }
-
-
-*/
-
+            //ToDo logica visualizazione Admin
 
         }else {
             try {
