@@ -14,6 +14,9 @@ import com.google.android.material.tabs.TabLayout;
 import com.happylearn.R;
 import com.happylearn.routes.HomeRequest;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class HomeFragment extends Fragment {
     public HomeFragment() {
         // Required empty public constructor
@@ -37,7 +40,9 @@ public class HomeFragment extends Fragment {
 
         TabLayout tabLayout = (TabLayout) view.findViewById(R.id.tabName);
 
-        RecyclerView availableSlots = (RecyclerView) view.findViewById(R.id.available_slots);
+
+        RecyclerView availableSlots =  (RecyclerView) view.findViewById(R.id.available_slots);
+
 
 
         //choice to not make a heavy network request if i already have a booking

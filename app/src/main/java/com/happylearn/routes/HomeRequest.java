@@ -14,7 +14,6 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.happylearn.R;
 import com.happylearn.adapters.HomePageAdapter;
-import com.happylearn.dao.BindableSlots;
 import com.happylearn.dao.Slot;
 import com.happylearn.dao.UserLogin;
 import com.happylearn.routes.interceptors.SetSessionOnRequestInterceptor;
@@ -93,24 +92,29 @@ public class HomeRequest implements Callback<List<Slot>> {
                 if (role.equals("cliente")) {
                     //servlet prenotazioni attive
                     MiePrenotazioniHomeRequest prenotazioniController =
-                            new MiePrenotazioniHomeRequest(context, activity, username, availableSlotsForDayandTime, viewSlots,tabHome);
+                            new MiePrenotazioniHomeRequest(context, activity, username, availableSlotsForDayandTime, viewSlots, tabHome);
                     prenotazioniController.start();
                 } else if (role.equals("amministratore")) {
                     allUtentiHomeRequest allUtentiHome =
-                            new allUtentiHomeRequest(context, activity, username, availableSlotsForDayandTime, viewSlots,tabHome);
+                            new allUtentiHomeRequest(context, activity, username, availableSlotsForDayandTime, viewSlots, tabHome);
                     allUtentiHome.start();
                 } else {
-                    viewBooking(availableSlotsForDayandTime.get(0),0);
+
+                    viewBooking(availableSlotsForDayandTime.get(0), 0);
 
                     tabHome.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
                         @Override
                         public void onTabSelected(TabLayout.Tab tab) {
-                            viewBooking(availableSlotsForDayandTime.get(tab.getPosition()),tab.getPosition());
+                            viewBooking(availableSlotsForDayandTime.get(tab.getPosition()), tab.getPosition());
                         }
+
                         @Override
-                        public void onTabUnselected(TabLayout.Tab tab) { }
+                        public void onTabUnselected(TabLayout.Tab tab) {
+                        }
+
                         @Override
-                        public void onTabReselected(TabLayout.Tab tab) { }
+                        public void onTabReselected(TabLayout.Tab tab) {
+                        }
                     });
                 }
             }
@@ -126,8 +130,6 @@ public class HomeRequest implements Callback<List<Slot>> {
     }
 
 
-
-
     @Override
     public void onFailure(Call<List<Slot>> call, Throwable t) {
         Log.d("NOODLE", t.toString());
@@ -136,44 +138,44 @@ public class HomeRequest implements Callback<List<Slot>> {
     }
 
 
-
-    private void viewBooking(List<List<Slot>> slotForTime,int day) {
-        List<BindableSlots> bindableSlots = new ArrayList<>();
-
-        for(int i=0;i<slotForTime.size();i++){
-            for (Slot slot : slotForTime.get(i)){
-                bindableSlots.add(new BindableSlots(slot));
+    private void viewBooking(List<List<Slot>> slotForTime, int day) {
+        List<Slot> listone = new ArrayList<>();
+        for (List<Slot> slotList:slotForTime){
+            for (Slot s:slotList){
+                listone.add(s);
             }
         }
 
         // Create adapter passing in the sample user data
-        HomePageAdapter adapter = new HomePageAdapter(bindableSlots, "mySlots", (AppCompatActivity)activity );
+        HomePageAdapter adapter = new HomePageAdapter(listone, context, (AppCompatActivity) activity);
 
         // Attach the adapter to the recyclerview to populate items
         this.viewSlots.setAdapter(adapter);
         // Set layout manager to position the items
         this.viewSlots.setLayoutManager(new LinearLayoutManager(context));
+
     }
 
     /**
      * get a List of Slot and return the same Slot divided in to List of Day -> time -> slot
+     *
      * @param availableSlot
      * @return list of List-Day -> List-time -> List-slot
      */
     public static List<List<List<Slot>>> trasformSlotToSlotForDayAndTime(List<Slot> availableSlot) {
         List<List<List<Slot>>> availableSlotsForDayandTime = new ArrayList(5);
-        for (int i=0;i<5;i++){
+        for (int i = 0; i < 5; i++) {
             List<List<Slot>> ora = new ArrayList<>(4);
-            for (int j=0;j<4;j++) {
-                ora.add(j,new ArrayList<Slot>());
+            for (int j = 0; j < 4; j++) {
+                ora.add(j, new ArrayList<Slot>());
             }
-            availableSlotsForDayandTime.add(i,ora);
+            availableSlotsForDayandTime.add(i, ora);
         }
 
-        int day =0;
-        int time =0;
+        int day = 0;
+        int time = 0;
         if (availableSlot.size() != 0) {
-            for(Slot slot : availableSlot){
+            for (Slot slot : availableSlot) {
                 if (day != slot.getDay()) {
                     day = slot.getDay();
                 }
@@ -190,32 +192,45 @@ public class HomeRequest implements Callback<List<Slot>> {
 
     /**
      * Association the number DAY to it String DAY
+     *
      * @param day
      * @return
      */
-    public static String dayToString (int day){
-        switch (day){
-            case 0: return "Lundedì";
-            case 1: return "Martedì";
-            case 2: return "Mercoledì";
-            case 3: return "Giovedì";
-            case 4: return "Venerdì";
-            default: return "Error Day";
+    public static String dayToString(int day) {
+        switch (day) {
+            case 0:
+                return "Lundedì";
+            case 1:
+                return "Martedì";
+            case 2:
+                return "Mercoledì";
+            case 3:
+                return "Giovedì";
+            case 4:
+                return "Venerdì";
+            default:
+                return "Error Day";
         }
     }
 
     /**
      * Association the number TIME to it String Time
+     *
      * @param time
      * @return
      */
-    public static String timeToString (int time){
-        switch (time){
-            case 0: return "15:00 -> 16:00";
-            case 1: return "16:00 -> 17:00";
-            case 2: return "17:00 -> 18:00";
-            case 3: return "18:00 -> 19:00";
-            default: return "Error Time";
+    public static String timeToString(int time) {
+        switch (time) {
+            case 0:
+                return "15:00 -> 16:00";
+            case 1:
+                return "16:00 -> 17:00";
+            case 2:
+                return "17:00 -> 18:00";
+            case 3:
+                return "18:00 -> 19:00";
+            default:
+                return "Error Time";
         }
     }
 }

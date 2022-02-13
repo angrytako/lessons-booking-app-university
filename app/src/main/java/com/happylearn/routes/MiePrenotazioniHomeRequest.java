@@ -14,7 +14,6 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.happylearn.R;
 import com.happylearn.adapters.HomePageAdapter;
-import com.happylearn.dao.BindableSlots;
 import com.happylearn.dao.Prenotazione;
 import com.happylearn.dao.Slot;
 import com.happylearn.routes.interceptors.SetSessionOnRequestInterceptor;
@@ -115,7 +114,7 @@ public class MiePrenotazioniHomeRequest implements Callback<List<Prenotazione>> 
 
 
     private void viewBooking(List<List<Slot>> slotForTime,int day , List<Prenotazione> prenotazioni) {
-        List<BindableSlots> bindableSlots = new ArrayList<>();
+     List<Slot> listone = new ArrayList<>();
 
         for(int i = 0; i<slotForTime.size(); i++){
             for (Slot slot : slotForTime.get(i)) {
@@ -128,17 +127,22 @@ public class MiePrenotazioniHomeRequest implements Callback<List<Prenotazione>> 
                     }
                 }
                 if (flagJustExistReservation == false) {
-                    bindableSlots.add(new BindableSlots(slot));
+                    listone.add(slot);
                 }
             }
+
         }
 
-        // Create adapter passing in the sample user data
-        HomePageAdapter adapter = new HomePageAdapter(bindableSlots, "mySlots",(AppCompatActivity)activity);
 
-        // Attach the adapter to the recyclerview to populate items
-        this.viewSlots.setAdapter(adapter);
-        // Set layout manager to position the items
-        this.viewSlots.setLayoutManager(new LinearLayoutManager(context));
+
+            // Create adapter passing in the sample user data
+            HomePageAdapter adapter = new HomePageAdapter(listone, context, (AppCompatActivity)activity );
+
+            // Attach the adapter to the recyclerview to populate items
+            this.viewSlots.setAdapter(adapter);
+            // Set layout manager to position the items
+            this.viewSlots.setLayoutManager(new LinearLayoutManager(context));
+
+
     }
 }

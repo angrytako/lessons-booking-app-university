@@ -18,7 +18,6 @@ public class DocentiListAdapter extends RecyclerView.Adapter<DocentiListAdapter.
     private Integer chois;
     private List<String> mData;
     private LayoutInflater mInflater;
-    private ItemClickListener mClickListener;
     private List<CheckBox> groupButton;
 
     // data is passed into the constructor
@@ -69,19 +68,15 @@ public class DocentiListAdapter extends RecyclerView.Adapter<DocentiListAdapter.
 
 
     // stores and recycles views as they are scrolled off screen
-    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public class ViewHolder extends RecyclerView.ViewHolder {
         CheckBox radioButton;
 
         ViewHolder(View itemView) {
             super(itemView);
             radioButton = itemView.findViewById(R.id.docenti_List_Item);
-            itemView.setOnClickListener(this);
         }
 
-        @Override
-        public void onClick(View view) {
-            if (mClickListener != null) mClickListener.onItemClick(view, getAdapterPosition());
-        }
+
     }
 
     // convenience method for getting data at click position
@@ -89,13 +84,8 @@ public class DocentiListAdapter extends RecyclerView.Adapter<DocentiListAdapter.
         return mData.get(id);
     }
 
-    // allows clicks events to be caught
-    void setClickListener(ItemClickListener itemClickListener) {
-        this.mClickListener = itemClickListener;
-    }
 
-    // parent activity will implement this method to respond to click events
-    public interface ItemClickListener {
-        void onItemClick(View view, int position);
-    }
+
+
+
 }

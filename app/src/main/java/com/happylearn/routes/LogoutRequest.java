@@ -6,21 +6,17 @@ import android.content.SharedPreferences;
 import android.util.Log;
 import android.widget.Toast;
 
-import androidx.recyclerview.widget.RecyclerView;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.happylearn.R;
-import com.happylearn.adapters.PrenotazioniAdapter;
-import com.happylearn.dao.BindablePrenotazione;
-import com.happylearn.dao.Prenotazione;
 import com.happylearn.dao.SimpleMessage;
 import com.happylearn.routes.interceptors.SetSessionOnRequestInterceptor;
 import com.happylearn.views.HappyLearnApplication;
+import com.happylearn.views.HomeFragment;
 
 import org.json.JSONObject;
-
-import java.util.List;
 
 import okhttp3.OkHttpClient;
 import retrofit2.Call;
@@ -71,8 +67,14 @@ public class LogoutRequest  implements Callback<SimpleMessage> {
             Activity activity = (Activity)context;
             SharedPreferences sharedPreferences = activity.getPreferences(activity.MODE_PRIVATE);
             sharedPreferences.edit().remove("SESSION");
-            ((HappyLearnApplication)context.getApplicationContext()).getUserData().setRole("Guest");
-            ((HappyLearnApplication)context.getApplicationContext()).getUserData().setUsername("Guest");
+            ((HappyLearnApplication)context.getApplicationContext()).getUserData().setRole("guest");
+            ((HappyLearnApplication)context.getApplicationContext()).getUserData().setUsername("guest");
+            ((AppCompatActivity)activity).getSupportFragmentManager().beginTransaction()
+                    .setReorderingAllowed(true)
+                    .addToBackStack(null)
+                    .remove(((AppCompatActivity)activity).getSupportFragmentManager().getFragments().get(0))
+                    .add(R.id.fragment_container, HomeFragment.class, null)
+                    .commit();
         } else{
             try {
                 JSONObject jObjError = new JSONObject(response.errorBody().string());
