@@ -2,11 +2,10 @@ package com.happylearn.routes;
 
 import android.app.Activity;
 import android.content.Context;
-import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
-import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -16,7 +15,6 @@ import com.google.gson.GsonBuilder;
 import com.happylearn.R;
 import com.happylearn.adapters.HomePageAdapter;
 import com.happylearn.dao.BindableSlots;
-import com.happylearn.dao.Docente;
 import com.happylearn.dao.Slot;
 import com.happylearn.dao.UserLogin;
 import com.happylearn.routes.interceptors.SetSessionOnRequestInterceptor;
@@ -84,11 +82,11 @@ public class HomeRequest implements Callback<List<Slot>> {
 
     @Override
     public void onResponse(Call<List<Slot>> call, Response<List<Slot>> response) {
+
         if (response.isSuccessful()) {
             List<Slot> availableSlot = response.body();
 
             if (availableSlot != null) {
-                Toast.makeText(context, "oke", Toast.LENGTH_SHORT).show();
 
                 List<List<List<Slot>>> availableSlotsForDayandTime = trasformSlotToSlotForDayAndTime(availableSlot);
 
@@ -107,7 +105,6 @@ public class HomeRequest implements Callback<List<Slot>> {
                     tabHome.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
                         @Override
                         public void onTabSelected(TabLayout.Tab tab) {
-                            Toast.makeText(context, "hai cliccato: " + tab.getPosition(), Toast.LENGTH_SHORT).show();
                             viewBooking(availableSlotsForDayandTime.get(tab.getPosition()),tab.getPosition());
                         }
                         @Override
@@ -148,10 +145,9 @@ public class HomeRequest implements Callback<List<Slot>> {
                 bindableSlots.add(new BindableSlots(slot));
             }
         }
-        ((HappyLearnApplication)activity.getApplication()).setSlots(bindableSlots);
 
         // Create adapter passing in the sample user data
-        HomePageAdapter adapter = new HomePageAdapter(((HappyLearnApplication)activity.getApplication()).getSlots(), "mySlots");
+        HomePageAdapter adapter = new HomePageAdapter(bindableSlots, "mySlots", (AppCompatActivity)activity );
 
         // Attach the adapter to the recyclerview to populate items
         this.viewSlots.setAdapter(adapter);

@@ -5,6 +5,8 @@ import android.content.Context;
 import android.util.Log;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.happylearn.R;
@@ -12,6 +14,7 @@ import com.happylearn.dao.Prenotazione;
 import com.happylearn.dao.SimpleMessage;
 import com.happylearn.routes.interceptors.SetSessionOnRequestInterceptor;
 import com.happylearn.views.HappyLearnApplication;
+import com.happylearn.views.HomeFragment;
 
 import org.json.JSONObject;
 
@@ -71,7 +74,13 @@ public class DoPrenotazioneRequest implements Callback<SimpleMessage> {
             SimpleMessage message = response.body();
             if (message!=null)  Toast.makeText(context, message.getMessage(), Toast.LENGTH_LONG).show();
             else Toast.makeText(context, "message.getMessage()==null", Toast.LENGTH_LONG).show();
-            //TODO mi sposto alla home
+
+            ((AppCompatActivity)activity).getSupportFragmentManager().beginTransaction()
+                    .setReorderingAllowed(true)
+                    .addToBackStack(null)
+                    .remove(((AppCompatActivity)activity).getSupportFragmentManager().getFragments().get(0))
+                    .add(R.id.fragment_container, HomeFragment.class, null)
+                    .commit();
         } else{
             try {
                 JSONObject jObjError = new JSONObject(response.errorBody().string());

@@ -82,7 +82,7 @@ public class MainActivity extends AppCompatActivity {
                             .setReorderingAllowed(true)
                             .addToBackStack(null)
                             .remove(getSupportFragmentManager().getFragments().get(0))
-                            .add(R.id.fragment_container, EffettuaPrenotazioneFragment.class, null)
+                            .add(R.id.fragment_container, HomeFragment.class, null)
                             .commit();
                     break;
                 case R.id.login_itm:

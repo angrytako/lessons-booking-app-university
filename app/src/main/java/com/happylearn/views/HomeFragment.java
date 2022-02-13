@@ -4,23 +4,15 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.tabs.TabLayout;
 import com.happylearn.R;
-import com.happylearn.adapters.HomePageAdapter;
-import com.happylearn.dao.Docente;
-import com.happylearn.dao.Slot;
 import com.happylearn.routes.HomeRequest;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class HomeFragment extends Fragment {
     public HomeFragment() {
@@ -56,6 +48,7 @@ public class HomeFragment extends Fragment {
 
         String username = ((HappyLearnApplication)this.getActivity().getApplication()).getUserData().getUsername().get();
         String role = ((HappyLearnApplication)this.getActivity().getApplication()).getUserData().getRole().get();
+        
 
         HomeRequest availableSlot = new HomeRequest(this.getContext(), this.getActivity(), username,role, availableSlots, tabLayout);
         availableSlot.start();
@@ -65,3 +58,28 @@ public class HomeFragment extends Fragment {
 
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

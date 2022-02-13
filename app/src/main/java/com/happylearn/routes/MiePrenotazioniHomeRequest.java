@@ -3,9 +3,9 @@ package com.happylearn.routes;
 import android.app.Activity;
 import android.content.Context;
 import android.util.Log;
-import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -15,7 +15,6 @@ import com.google.gson.GsonBuilder;
 import com.happylearn.R;
 import com.happylearn.adapters.HomePageAdapter;
 import com.happylearn.dao.BindableSlots;
-import com.happylearn.dao.Docente;
 import com.happylearn.dao.Prenotazione;
 import com.happylearn.dao.Slot;
 import com.happylearn.routes.interceptors.SetSessionOnRequestInterceptor;
@@ -134,10 +133,8 @@ public class MiePrenotazioniHomeRequest implements Callback<List<Prenotazione>> 
             }
         }
 
-        ((HappyLearnApplication)activity.getApplication()).setSlots(bindableSlots);
-
         // Create adapter passing in the sample user data
-        HomePageAdapter adapter = new HomePageAdapter(((HappyLearnApplication)activity.getApplication()).getSlots(), "mySlots");
+        HomePageAdapter adapter = new HomePageAdapter(bindableSlots, "mySlots",(AppCompatActivity)activity);
 
         // Attach the adapter to the recyclerview to populate items
         this.viewSlots.setAdapter(adapter);

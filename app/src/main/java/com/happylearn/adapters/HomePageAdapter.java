@@ -1,32 +1,32 @@
 package com.happylearn.adapters;
 
-import android.content.ClipData;
 import android.content.Context;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.happylearn.dao.BindablePrenotazione;
-import com.happylearn.dao.BindableSlots;
-import com.happylearn.dao.Slot;
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.happylearn.R;
+import com.happylearn.dao.BindableSlots;
 import com.happylearn.databinding.ItemViewHomepageBinding;
+import com.happylearn.views.EffettuaPrenotazioneFragment;
+import com.happylearn.views.HappyLearnApplication;
 
 import java.util.List;
 
 public class HomePageAdapter extends RecyclerView.Adapter<HomePageAdapter.ViewHolder> {
     private List<BindableSlots> slots;
     private String type;
+    private AppCompatActivity activity;
 
-    public HomePageAdapter(List<BindableSlots> slots, String type) {
+    public HomePageAdapter(List<BindableSlots> slots, String type, AppCompatActivity activity) {
         this.slots = slots;
         this.type = type;
+        this.activity = activity;
     }
 
     // Provide a direct reference to each of the views within a data item
@@ -58,7 +58,7 @@ public class HomePageAdapter extends RecyclerView.Adapter<HomePageAdapter.ViewHo
         ItemViewHomepageBinding mBinding = null;
 
         //if(type.equals........)
-        mBinding = DataBindingUtil.inflate(inflater, R.layout.item_view_homepage,parent,false);
+        mBinding = DataBindingUtil.inflate(inflater, R.layout.item_view_homepage, parent, false);
 
         ViewHolder viewHolder = new ViewHolder(mBinding);
 
@@ -71,7 +71,7 @@ public class HomePageAdapter extends RecyclerView.Adapter<HomePageAdapter.ViewHo
         BindableSlots slot = slots.get(position);
 
         // Set item views based on your views and data model
-        if(holder.slotsItemView != null)
+        if (holder.slotsItemView != null)
             holder.slotsItemView.setSlot(slot);
         else
             holder.slotsItemView.setSlot(slot);
@@ -79,9 +79,17 @@ public class HomePageAdapter extends RecyclerView.Adapter<HomePageAdapter.ViewHo
         //setting buttons event listeners
         //each will have a toast
 
-        if(holder.slotsItemView != null)
-            holder.slotsItemView.courseBtn.setOnClickListener((e)->{
-                Toast.makeText(e.getContext(), "hai cliccato ", Toast.LENGTH_SHORT).show();
+        if (holder.slotsItemView != null)
+            holder.slotsItemView.courseBtn.setOnClickListener((e) -> {
+                //ToDo cambia pagina
+                Toast.makeText(e.getContext(), "hai cliccato " + position, Toast.LENGTH_SHORT).show();
+                ((HappyLearnApplication)activity.getApplication()).setSlot(slot.getSlot());
+                activity.getSupportFragmentManager().beginTransaction()
+                        .setReorderingAllowed(true)
+                        .addToBackStack(null)
+                        .remove(activity.getSupportFragmentManager().getFragments().get(0))
+                        .add(R.id.fragment_container, EffettuaPrenotazioneFragment.class, null)
+                        .commit();
             });
 
     }
@@ -91,3 +99,13 @@ public class HomePageAdapter extends RecyclerView.Adapter<HomePageAdapter.ViewHo
         return slots.size();
     }
 }
+
+
+
+
+
+
+
+
+
+

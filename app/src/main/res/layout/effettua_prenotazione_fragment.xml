@@ -12,6 +12,13 @@
         tools:layout_editor_absoluteY="1dp">
 
         <TextView
+            android:id="@+id/utente"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Utente: " />
+
+
+        <TextView
             android:id="@+id/corso"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -33,7 +40,7 @@
             android:id="@+id/textView6"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Docenti:" />
+            android:text="Scegli il docente con cui effettuare la ripetizione:" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/docentiList"

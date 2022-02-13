@@ -4,6 +4,6 @@
     <string name="menu_close">Close</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
 <!--    <string name="BASE_URL">http://172.18.96.11:8080/</string>-->
-    <string name="BASE_URL">http://192.168.1.7:8080/</string>
+    <string name="BASE_URL">http://192.168.1.9:8080/</string>
     <!--    localhost:8080-->
 </resources>
