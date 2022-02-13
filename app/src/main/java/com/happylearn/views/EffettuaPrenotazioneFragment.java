@@ -1,10 +1,14 @@
 package com.happylearn.views;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -22,8 +26,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class EffettuaPrenotazioneFragment extends Fragment {
-    DocentiListAdapter adapter;
-
+    private DocentiListAdapter adapter;
+    private Context context = null;
     public EffettuaPrenotazioneFragment() {
         // Required empty public constructor
     }
@@ -32,7 +36,7 @@ public class EffettuaPrenotazioneFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.mie_prenotazioni_fragment, container, false);
+        return inflater.inflate(R.layout.effettua_prenotazione_fragment, container, false);
     }
 
 
@@ -44,6 +48,8 @@ public class EffettuaPrenotazioneFragment extends Fragment {
         TextView corso = (TextView) view.findViewById(R.id.corso);
         TextView giorno = (TextView) view.findViewById(R.id.giorno);
         TextView ora = (TextView) view.findViewById(R.id.ora);
+        Button prenota = (Button) view.findViewById(R.id.prenota);
+        Button annulla = (Button) view.findViewById(R.id.annulla);
 
         /*di prova*/
         List teacherList = new ArrayList<Docente>();
@@ -70,18 +76,36 @@ public class EffettuaPrenotazioneFragment extends Fragment {
        // adapter.setClickListener(this.getContext());
         recyclerView.setAdapter(adapter);
 
-        //choice to not make a heavy network request if i already have a booking
-        //this only fails if I make a booking myself from another client or if
-        //an admin does it
-        //this whole think might have to be moved at the start of the main activity,
-        //for performance gain
+        context=this.getContext();
+        annulla.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //ToDO
+                Toast.makeText( context, "Annulla, dovrai tornare alla home", Toast.LENGTH_LONG).show();
+            }
+        });
+
+        prenota.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                int choise = ((DocentiListAdapter)recyclerView.getAdapter()).getChois();
+                if( -1 == choise)
+                    Toast.makeText( context, "Per effettuare la prenotazione devi selezionare un utente", Toast.LENGTH_LONG).show();
+                else{
+                    CheckBox checkBoxSelected = (CheckBox) recyclerView.getLayoutManager().findViewByPosition(choise).findViewById(R.id.docenti_List_Item);
+                    Toast.makeText( context, checkBoxSelected.getText(), Toast.LENGTH_LONG).show();
+                    //TODO servlet di invio della prenotazione!
+                }
+            }
+        });
+
+
 /*
         String username = ((HappyLearnApplication)this.getActivity().getApplication()).getUserData().getUsername().get();
         String role = ((HappyLearnApplication)this.getActivity().getApplication()).getUserData().getRole().get();
 */
 
 
-        //need this else since removing the fragment takes it away
 
     }
 }

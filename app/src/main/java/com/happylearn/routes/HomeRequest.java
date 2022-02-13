@@ -56,7 +56,8 @@ public class HomeRequest implements Callback<List<Slot>> {
                 .create();
 
         //used to set the cookie on the request, if there is one
-        SetSessionOnRequestInterceptor setSessionInterceptor = new SetSessionOnRequestInterceptor((HappyLearnApplication) activity.getApplication());
+        SetSessionOnRequestInterceptor setSessionInterceptor =
+                new SetSessionOnRequestInterceptor((HappyLearnApplication) activity.getApplication());
 
         OkHttpClient okHttpClient = new OkHttpClient()
                 .newBuilder()

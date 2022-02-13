@@ -36,6 +36,10 @@ public class DocentiListAdapter extends RecyclerView.Adapter<DocentiListAdapter.
         return new ViewHolder(view);
     }
 
+    public int getChois() {
+        return chois.intValue();
+    }
+
     // binds the data to the TextView in each row
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {

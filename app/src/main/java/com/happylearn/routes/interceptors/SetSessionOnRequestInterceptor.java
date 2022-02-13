@@ -1,14 +1,12 @@
 package com.happylearn.routes.interceptors;
 
-import android.util.Log;
-
 import com.happylearn.views.HappyLearnApplication;
 
 import java.io.IOException;
 
 import okhttp3.Interceptor;
-import okhttp3.Response;
 import okhttp3.Request;
+import okhttp3.Response;
 
 public class SetSessionOnRequestInterceptor implements Interceptor {
     HappyLearnApplication application;
@@ -22,7 +20,8 @@ public class SetSessionOnRequestInterceptor implements Interceptor {
         Request req = chain.request();
         //if there is a cookie, set it in the request
         //else just send the request as it is
-        Log.d("SESSION_COOKIE",application.getSessionCookie());
+      //ToDo
+     //   Log.d("SESSION_COOKIE",application.getSessionCookie());
 
         if(application.getSessionCookie() != null) {
             Request authorizedRequest = req.newBuilder()
