@@ -12,7 +12,8 @@ public class Prenotazione {
         private int giorno;			// 0: lunedì, 1: martedì, 2: mercoledì, 3: giovedì, 4: venerdì
         private int orario;			// 0: 15-16, 1: 16-17,  2: 17-18,    3: 18-19
 
-        public Prenotazione(String corso, int idDocente, String nomeDocente, String cognomeDocente, String ruolo, String utente, String stato, int giorno, int orario) {
+        public Prenotazione(String corso, int idDocente, String nomeDocente, String cognomeDocente, String ruolo,
+                            String utente, String stato, int giorno, int orario) {
             this.corso = corso;
             this.idDocente = idDocente;
             this.utente = utente;

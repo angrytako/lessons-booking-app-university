@@ -1,14 +1,16 @@
 package com.happylearn.dao;
 
 public class SimpleMessage {
+    private String message;
 
-    public String getMessage() { return message; }
+
+    public String getMessage() {
+        return message;
+    }
 
     public void setMessage(String message) {
         this.message = message;
     }
 
 
-
-    private String message;
 }

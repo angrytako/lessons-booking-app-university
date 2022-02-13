@@ -1,5 +1,6 @@
 package com.happylearn.views;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -19,7 +20,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.happylearn.R;
 import com.happylearn.adapters.DocentiListAdapter;
 import com.happylearn.dao.Docente;
+import com.happylearn.dao.Prenotazione;
 import com.happylearn.dao.Slot;
+import com.happylearn.routes.DoPrenotazioneRequest;
 import com.happylearn.routes.HomeRequest;
 
 import java.util.ArrayList;
@@ -28,6 +31,7 @@ import java.util.List;
 public class EffettuaPrenotazioneFragment extends Fragment {
     private DocentiListAdapter adapter;
     private Context context = null;
+    private Activity activity=null;
     public EffettuaPrenotazioneFragment() {
         // Required empty public constructor
     }
@@ -53,9 +57,10 @@ public class EffettuaPrenotazioneFragment extends Fragment {
 
         /*di prova*/
         List teacherList = new ArrayList<Docente>();
-        teacherList.add(new Docente(5,"Roberta","Oliboni",false));
+        teacherList.add(new Docente(3,"Felice","Cardone",false));
         teacherList.add(new Docente(2,"Gino","Bono",false));
-        ((HappyLearnApplication)this.getActivity().getApplication()).setSlot(new Slot("Logica", teacherList,0,0));
+        ((HappyLearnApplication)this.getActivity().getApplication()).setSlot(new Slot("Analisi", teacherList,0,0));
+        //fine sezione di prova
 
         Slot slot = ((HappyLearnApplication)this.getActivity().getApplication()).getSlot();
 
@@ -66,8 +71,7 @@ public class EffettuaPrenotazioneFragment extends Fragment {
 
         ArrayList<String> docentiString = new ArrayList<>();
         for(Docente d : slot.getTeacherList()){
-            docentiString.add(d.getNome());
-            docentiString.add(d.getCognome());
+            docentiString.add("("+d.getId()+") "+ d.getNome()+ " " +d.getCognome());
         }
 
         RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.docentiList);
@@ -77,6 +81,9 @@ public class EffettuaPrenotazioneFragment extends Fragment {
         recyclerView.setAdapter(adapter);
 
         context=this.getContext();
+        activity=this.getActivity();
+        String role = ((HappyLearnApplication)this.getActivity().getApplication()).getUserData().getRole().get();
+        String username = ((HappyLearnApplication)this.getActivity().getApplication()).getUserData().getUsername().get();
         annulla.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -95,17 +102,27 @@ public class EffettuaPrenotazioneFragment extends Fragment {
                     CheckBox checkBoxSelected = (CheckBox) recyclerView.getLayoutManager().findViewByPosition(choise).findViewById(R.id.docenti_List_Item);
                     Toast.makeText( context, checkBoxSelected.getText(), Toast.LENGTH_LONG).show();
                     //TODO servlet di invio della prenotazione!
+                    Docente docenteSelected = parserDocente(checkBoxSelected.getText().toString());
+                    DoPrenotazioneRequest availableSlot = new DoPrenotazioneRequest(context,activity ,
+                            new Prenotazione(slot.getCourse(),docenteSelected.getId(),docenteSelected.getNome(),docenteSelected.getCognome(),
+                                    role,username,"attiva",slot.getDay(),slot.getTime()));
+                    availableSlot.start();
                 }
             }
         });
 
 
-/*
-        String username = ((HappyLearnApplication)this.getActivity().getApplication()).getUserData().getUsername().get();
-        String role = ((HappyLearnApplication)this.getActivity().getApplication()).getUserData().getRole().get();
-*/
-
 
 
     }
+
+
+    private Docente parserDocente (String text){
+        String[] singoleComponenti = text.split(" ");
+
+        return new Docente(  Integer.parseInt(String.valueOf(singoleComponenti[0].charAt(1))),
+                singoleComponenti[1].trim(),singoleComponenti[2].trim(),false);
+    }
+
+
 }

@@ -26,6 +26,9 @@ public interface Routes {
     @PUT("Noodle_war/PrenotazioniServlet")
     Call<SimpleMessage> changePrenotazione(@Body Prenotazione updatedPrenotazione);
 
+    @POST("Noodle_war/PrenotazioniServlet")
+    Call<SimpleMessage> doPrenotazione(@Body Prenotazione doPrenotazione);
+
     @GET("Noodle_war/PrenotazioniServlet")
     Call<List<Prenotazione>> myPrenotazioni(@Query("username") String username);
 
