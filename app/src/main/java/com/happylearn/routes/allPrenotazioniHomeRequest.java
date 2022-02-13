@@ -84,6 +84,9 @@ public class allPrenotazioniHomeRequest implements Callback<List<Prenotazione>> 
             List<Prenotazione> allPrenotazioni = response.body();
             //this.availableSlotsForDayandTime    this.utenti
             //testati ed arrivano i dati competi
+
+
+
             //ToDo logica visualizazione Admin
 
         }else {

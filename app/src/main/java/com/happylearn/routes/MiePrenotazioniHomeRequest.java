@@ -96,54 +96,6 @@ public class MiePrenotazioniHomeRequest implements Callback<List<Prenotazione>> 
                 public void onTabReselected(TabLayout.Tab tab) { }
             });
 
-
-            int day;
-            int time;
-            if (availableSlotsForDayandTime.size() != 0) {
-                /*
-                day = availableSlot.get(0).getDay();
-                time = availableSlot.get(0).getTime();
-                ripetizioniHome.append("Giorno:" + day + "\n");
-                ripetizioniHome.append("ora:" + time + "\n");
-
-                for (int i = 0; i < availableSlot.size(); i++) {
-                    if (day != availableSlot.get(i).getDay()) {
-                        day = availableSlot.get(i).getDay();
-                        ripetizioniHome.append("Giorno:" + day + "\n");
-                    }
-                    if (time != availableSlot.get(i).getTime()) {
-                        time = availableSlot.get(i).getTime();
-                        ripetizioniHome.append("ora:" + time + "\n");
-                    }
-
-
-                    Boolean flagJustExistReservation = false;
-                    for (Prenotazione p : prenotazioni){
-                        if (p.getGiorno()==day && p.getOrario()==time && !p.getStato().equals("cancellata")) flagJustExistReservation=true;
-                    }
-
-                    if (flagJustExistReservation == false){
-                        /*
-                        ripetizioniHome.append("corso:" + availableSlot.get(i).getCourse() + "\n");
-
-                        ripetizioniHome.append("Docenti:" + "\n");
-                        if (availableSlot.get(i).getTeacherList() != null) {
-                            for (int j = 0; j < availableSlot.get(i).getTeacherList().size(); j++) {
-                                ripetizioniHome.append(availableSlot.get(i).getTeacherList().get(j) + " ");
-                            }
-                            ripetizioniHome.append("\n");
-                        }
-
-
-                    }else
-                    {
-                        ripetizioniHome.append("Ho gi una prenotazione attiva su questo slot\n");
-                    }
-                }
-            */
-            }
-
-
         } else {
             try {
                 JSONObject jObjError = new JSONObject(response.errorBody().string());
@@ -167,30 +119,19 @@ public class MiePrenotazioniHomeRequest implements Callback<List<Prenotazione>> 
         List<BindableSlots> bindableSlots = new ArrayList<>();
 
         for(int i = 0; i<slotForTime.size(); i++){
-            for (Slot slot : slotForTime.get(i)){
+            for (Slot slot : slotForTime.get(i)) {
                 Boolean flagJustExistReservation = false;
-                Prenotazione prenotazione =null;
-                for (Prenotazione p : prenotazioni){
-                    if (p.getGiorno()==day && p.getOrario()==i && !p.getStato().equals("cancellata")) {
-                        flagJustExistReservation=true;
+                Prenotazione prenotazione = null;
+                for (Prenotazione p : prenotazioni) {
+                    if (p.getGiorno() == day && p.getOrario() == i && !p.getStato().equals("cancellata")) {
+                        flagJustExistReservation = true;
                         prenotazione = p;
                     }
                 }
-                if (flagJustExistReservation == false){
+                if (flagJustExistReservation == false) {
                     bindableSlots.add(new BindableSlots(slot));
-//                    viewSlots.append(slot.getCourse() +"\n");
-//                    for (Docente docente : slot.getTeacherList()){
-//                        // lista append
-//                        viewSlots.append("("+ docente.getId()+") " + docente.getNome() + " " + docente.getCognome() + "\n");
-//                    }
                 }
-//                else{
-//                    viewSlots.append("Prenotazione già attiva su: \nCorso: "+ prenotazione.getCorso()  +"\nDocente: ("
-//                            +prenotazione.getIdDocente()+") "+prenotazione.getNomeDocente() +" " + prenotazione.getCognomeDocente() +"\n" );
-//                    break;
-//                }
             }
-
         }
 
         ((HappyLearnApplication)activity.getApplication()).setSlots(bindableSlots);
