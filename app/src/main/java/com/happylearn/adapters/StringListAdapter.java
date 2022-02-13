@@ -13,7 +13,7 @@ import com.happylearn.R;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DocentiListAdapter extends RecyclerView.Adapter<DocentiListAdapter.ViewHolder> {
+public class StringListAdapter extends RecyclerView.Adapter<StringListAdapter.ViewHolder> {
 
     private Integer chois;
     private List<String> mData;
@@ -21,7 +21,7 @@ public class DocentiListAdapter extends RecyclerView.Adapter<DocentiListAdapter.
     private List<CheckBox> groupButton;
 
     // data is passed into the constructor
-    public DocentiListAdapter(Context context, List<String> data) {
+    public StringListAdapter(Context context, List<String> data) {
         this.mInflater = LayoutInflater.from(context);
         this.mData = data;
         this.groupButton= new ArrayList<>(data.size());

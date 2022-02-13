@@ -45,8 +45,22 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/docentiList"
             android:layout_width="match_parent"
-            android:layout_height="208dp" />
+            android:layout_height="wrap_content" >
 
+        </androidx.recyclerview.widget.RecyclerView>
+
+
+        <TextView
+            android:id="@+id/sceltaAdmin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Scegli l'utente su cui effettuare la prenotazione:"/>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/utenti"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+        </androidx.recyclerview.widget.RecyclerView>
 
         <LinearLayout
             android:layout_width="match_parent"

@@ -19,19 +19,21 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.happylearn.R;
-import com.happylearn.adapters.DocentiListAdapter;
+import com.happylearn.adapters.StringListAdapter;
 import com.happylearn.dao.Docente;
 import com.happylearn.dao.Prenotazione;
 import com.happylearn.dao.Slot;
+import com.happylearn.routes.AdminPrenotazioniHome;
 import com.happylearn.routes.DoPrenotazioneRequest;
 import com.happylearn.routes.HomeRequest;
 
 import java.util.ArrayList;
 
 public class EffettuaPrenotazioneFragment extends Fragment {
-    private DocentiListAdapter adapter;
+    private StringListAdapter adapter;
     private Context context = null;
-    private Activity activity=null;
+    private Activity activity = null;
+
     public EffettuaPrenotazioneFragment() {
         // Required empty public constructor
     }
@@ -55,96 +57,104 @@ public class EffettuaPrenotazioneFragment extends Fragment {
         TextView ora = (TextView) view.findViewById(R.id.ora);
         Button prenota = (Button) view.findViewById(R.id.prenota);
         Button annulla = (Button) view.findViewById(R.id.annulla);
+        TextView sceltaAdmin = (TextView) view.findViewById(R.id.sceltaAdmin);
+        RecyclerView recyclerViewCheckBox = (RecyclerView) view.findViewById(R.id.docentiList);
+        RecyclerView recyclerViewUtenti = (RecyclerView) view.findViewById(R.id.utenti);
 
 
-        Slot slot = ((HappyLearnApplication)this.getActivity().getApplication()).getSlot();
-        context=this.getContext();
-        activity=this.getActivity();
-        String role = ((HappyLearnApplication)this.getActivity().getApplication()).getUserData().getRole().get();
-        String username = ((HappyLearnApplication)this.getActivity().getApplication()).getUserData().getUsername().get();
-
+        Slot slot = ((HappyLearnApplication) this.getActivity().getApplication()).getSlot();
+        context = this.getContext();
+        activity = this.getActivity();
+        String role = ((HappyLearnApplication) this.getActivity().getApplication()).getUserData().getRole().get();
+        String username = ((HappyLearnApplication) this.getActivity().getApplication()).getUserData().getUsername().get();
 
         corso.append(slot.getCourse());
         giorno.append(HomeRequest.dayToString(slot.getDay()));
         ora.append(HomeRequest.timeToString(slot.getTime()));
-        if (username==null || username.isEmpty()) utente.append("guest");
+        if (username == null || username.isEmpty()) utente.append("guest");
         else if (username.isEmpty()) utente.append("guest");
         else utente.append(username);
 
         ArrayList<String> docentiString = new ArrayList<>();
-        for(Docente d : slot.getTeacherList()){
-            docentiString.add("("+d.getId()+") "+ d.getNome()+ " " +d.getCognome());
+        for (Docente d : slot.getTeacherList()) {
+            docentiString.add("(" + d.getId() + ") " + d.getNome() + " " + d.getCognome());
         }
 
-        RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.docentiList);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
-        adapter = new DocentiListAdapter(this.getContext(), docentiString);
-       // adapter.setClickListener(this.getContext());
-        recyclerView.setAdapter(adapter);
-
-
+        recyclerViewCheckBox.setLayoutManager(new LinearLayoutManager(this.getContext()));
+        adapter = new StringListAdapter(this.getContext(), docentiString);
+        // adapter.setClickListener(this.getContext());
+        recyclerViewCheckBox.setAdapter(adapter);
 
 
         annulla.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ((AppCompatActivity)activity).getSupportFragmentManager().beginTransaction()
+                ((AppCompatActivity) activity).getSupportFragmentManager().beginTransaction()
                         .setReorderingAllowed(true)
                         .addToBackStack(null)
-                        .remove(((AppCompatActivity)activity).getSupportFragmentManager().getFragments().get(0))
+                        .remove(((AppCompatActivity) activity).getSupportFragmentManager().getFragments().get(0))
                         .add(R.id.fragment_container, HomeFragment.class, null)
                         .commit();
             }
         });
 
+        if (!"amministratore".equals(role)) {
+            sceltaAdmin.setText("");
+            sceltaAdmin.setHeight(1);
 
-        if ("guest".equals(role)){
-            prenota.setText("Login");
-            prenota.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    ((AppCompatActivity)activity).getSupportFragmentManager().beginTransaction()
-                            .setReorderingAllowed(true)
-                            .addToBackStack(null)
-                            .remove(((AppCompatActivity)activity).getSupportFragmentManager().getFragments().get(0))
-                            .add(R.id.fragment_container, LoginFragment.class, null)
-                            .commit();
-                }
-            });
-        }else{
-            prenota.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    int choise = ((DocentiListAdapter)recyclerView.getAdapter()).getChois();
-                    if( -1 == choise)
-                        Toast.makeText( context, "Per effettuare la prenotazione devi selezionare un Docente", Toast.LENGTH_LONG).show();
-                    else{
-                        CheckBox checkBoxSelected = (CheckBox) recyclerView.getLayoutManager().findViewByPosition(choise).findViewById(R.id.docenti_List_Item);
 
-                        Docente docenteSelected = parserDocente(checkBoxSelected.getText().toString());
-                        DoPrenotazioneRequest availableSlot = new DoPrenotazioneRequest(context,activity ,
-                                new Prenotazione(slot.getCourse(),docenteSelected.getId(),docenteSelected.getNome(),docenteSelected.getCognome(),
-                                        role,username,"attiva",slot.getDay(),slot.getTime()));
-                        availableSlot.start();
+            if ("guest".equals(role)) {
+                prenota.setText("Login");
+                prenota.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        ((AppCompatActivity) activity).getSupportFragmentManager().beginTransaction()
+                                .setReorderingAllowed(true)
+                                .addToBackStack(null)
+                                .remove(((AppCompatActivity) activity).getSupportFragmentManager().getFragments().get(0))
+                                .add(R.id.fragment_container, LoginFragment.class, null)
+                                .commit();
                     }
-                }
-            });
+                });
+            } else {
+                prenota.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        int choise = ((StringListAdapter) recyclerViewCheckBox.getAdapter()).getChois();
+                        if (-1 == choise)
+                            Toast.makeText(context, "Per effettuare la prenotazione devi selezionare un Docente", Toast.LENGTH_LONG).show();
+                        else {
+                            CheckBox checkBoxSelected = (CheckBox) recyclerViewCheckBox.getLayoutManager().findViewByPosition(choise).findViewById(R.id.docenti_List_Item);
+
+                            Docente docenteSelected = parserDocente(checkBoxSelected.getText().toString());
+                            DoPrenotazioneRequest availableSlot = new DoPrenotazioneRequest(context, activity,
+                                    new Prenotazione(slot.getCourse(), docenteSelected.getId(), docenteSelected.getNome(), docenteSelected.getCognome(),
+                                            role, username, "attiva", slot.getDay(), slot.getTime()));
+                            availableSlot.start();
+                        }
+                    }
+                });
+            }
+
+
+        } else {
+            //TODO devo prendere i vari utenti e le varie prenotazioni, dopo di che imposto la listwiue dell'utente
+            //serve alla fine : context,activity, prenotazione(slot checkBox  role username )
+            AdminPrenotazioniHome adminPrenotazioniHome =
+                    new AdminPrenotazioniHome(context, activity, slot, recyclerViewCheckBox, role, username, recyclerViewUtenti,prenota);
+            adminPrenotazioniHome.start();
+
         }
-
-
-
-
-
 
 
     }
 
 
-    private Docente parserDocente (String text){
+    public static Docente parserDocente(String text) {
         String[] singoleComponenti = text.split(" ");
 
-        return new Docente(  Integer.parseInt(String.valueOf(singoleComponenti[0].charAt(1))),
-                singoleComponenti[1].trim(),singoleComponenti[2].trim(),false);
+        return new Docente(Integer.parseInt(String.valueOf(singoleComponenti[0].charAt(1))),
+                singoleComponenti[1].trim(), singoleComponenti[2].trim(), false);
     }
 
 

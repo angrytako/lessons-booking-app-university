@@ -94,10 +94,6 @@ public class HomeRequest implements Callback<List<Slot>> {
                     MiePrenotazioniHomeRequest prenotazioniController =
                             new MiePrenotazioniHomeRequest(context, activity, username, availableSlotsForDayandTime, viewSlots, tabHome);
                     prenotazioniController.start();
-                } else if (role.equals("amministratore")) {
-                    allUtentiHomeRequest allUtentiHome =
-                            new allUtentiHomeRequest(context, activity, username, availableSlotsForDayandTime, viewSlots, tabHome);
-                    allUtentiHome.start();
                 } else {
 
                     viewBooking(availableSlotsForDayandTime.get(0), 0);
@@ -116,6 +112,7 @@ public class HomeRequest implements Callback<List<Slot>> {
                         public void onTabReselected(TabLayout.Tab tab) {
                         }
                     });
+
                 }
             }
 
