@@ -7,10 +7,15 @@ import android.util.Log;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.google.android.material.tabs.TabLayout;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.happylearn.R;
+import com.happylearn.adapters.HomePageAdapter;
+import com.happylearn.dao.BindableSlots;
 import com.happylearn.dao.Docente;
 import com.happylearn.dao.Slot;
 import com.happylearn.dao.UserLogin;
@@ -35,17 +40,17 @@ public class HomeRequest implements Callback<List<Slot>> {
     private UserLogin userLogin;
     private Activity activity;
     private String username;
-    private TextView textViewHome;
+    private RecyclerView viewSlots;
     private TabLayout tabHome;
     private String role;
 
-    public HomeRequest(Context context, Activity activity, String username, String role, TextView textViewHome, TabLayout tabLayout) {
+    public HomeRequest(Context context, Activity activity, String username, String role, RecyclerView viewSlots, TabLayout tabLayout) {
         this.userLogin = userLogin;
         this.context = context;
         this.activity = activity;
         this.username = username;
         BASE_URL = context.getString(R.string.BASE_URL);
-        this.textViewHome = textViewHome;
+        this.viewSlots = viewSlots;
         this.tabHome = tabLayout;
         this.role = role;
     }
@@ -74,37 +79,35 @@ public class HomeRequest implements Callback<List<Slot>> {
         //TODO avaibleSlot richiede un argomento *forse*
         Call<List<Slot>> call = gerritAPI.availableSlots();
         call.enqueue(this);
-
     }
 
 
     @Override
     public void onResponse(Call<List<Slot>> call, Response<List<Slot>> response) {
         if (response.isSuccessful()) {
-            textViewHome.setMovementMethod(new ScrollingMovementMethod());
-
             List<Slot> availableSlot = response.body();
 
             if (availableSlot != null) {
+                Toast.makeText(context, "oke", Toast.LENGTH_SHORT).show();
+
                 List<List<List<Slot>>> availableSlotsForDayandTime = trasformSlotToSlotForDayAndTime(availableSlot);
 
                 if (role.equals("cliente")) {
                     //servlet prenotazioni attive
                     MiePrenotazioniHomeRequest prenotazioniController =
-                            new MiePrenotazioniHomeRequest(context, activity, username, availableSlotsForDayandTime, textViewHome,tabHome);
+                            new MiePrenotazioniHomeRequest(context, activity, username, availableSlotsForDayandTime, viewSlots,tabHome);
                     prenotazioniController.start();
                 } else if (role.equals("amministratore")) {
                     allUtentiHomeRequest allUtentiHome =
-                            new allUtentiHomeRequest(context, activity, username, availableSlotsForDayandTime, textViewHome,tabHome);
+                            new allUtentiHomeRequest(context, activity, username, availableSlotsForDayandTime, viewSlots,tabHome);
                     allUtentiHome.start();
                 } else {
-
                     viewBooking(availableSlotsForDayandTime.get(0),0);
-
 
                     tabHome.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
                         @Override
                         public void onTabSelected(TabLayout.Tab tab) {
+                            Toast.makeText(context, "hai cliccato: " + tab.getPosition(), Toast.LENGTH_SHORT).show();
                             viewBooking(availableSlotsForDayandTime.get(tab.getPosition()),tab.getPosition());
                         }
                         @Override
@@ -113,10 +116,7 @@ public class HomeRequest implements Callback<List<Slot>> {
                         public void onTabReselected(TabLayout.Tab tab) { }
                     });
                 }
-
-
             }
-
 
         } else {
             try {
@@ -141,20 +141,22 @@ public class HomeRequest implements Callback<List<Slot>> {
 
 
     private void viewBooking(List<List<Slot>> slotForTime,int day) {
-        textViewHome.setText("Ripetizioni disponibili di:"+dayToString(day) +"\n");
+        List<BindableSlots> bindableSlots = new ArrayList<>();
 
         for(int i=0;i<slotForTime.size();i++){
-            textViewHome.append(timeToString(i) + " -------------------------------------------------\n");
             for (Slot slot : slotForTime.get(i)){
-                textViewHome.append(slot.getCourse() +"\n");
-                for (Docente docente : slot.getTeacherList()){
-                    textViewHome.append("("+ docente.getId()+") " + docente.getNome() + " " + docente.getCognome() + "\n");
-                }
+                bindableSlots.add(new BindableSlots(slot));
             }
-
         }
+        ((HappyLearnApplication)activity.getApplication()).setSlots(bindableSlots);
 
+        // Create adapter passing in the sample user data
+        HomePageAdapter adapter = new HomePageAdapter(((HappyLearnApplication)activity.getApplication()).getSlots(), "mySlots");
 
+        // Attach the adapter to the recyclerview to populate items
+        this.viewSlots.setAdapter(adapter);
+        // Set layout manager to position the items
+        this.viewSlots.setLayoutManager(new LinearLayoutManager(context));
     }
 
     /**
@@ -213,10 +215,10 @@ public class HomeRequest implements Callback<List<Slot>> {
      */
     public static String timeToString (int time){
         switch (time){
-            case 0: return "16:00 -> 17:00";
-            case 1: return "17:00 -> 18:00";
-            case 2: return "18:00 -> 19:00";
-            case 3: return "19:00 -> 20:00";
+            case 0: return "15:00 -> 16:00";
+            case 1: return "16:00 -> 17:00";
+            case 2: return "17:00 -> 18:00";
+            case 3: return "18:00 -> 19:00";
             default: return "Error Time";
         }
     }

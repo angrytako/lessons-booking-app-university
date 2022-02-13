@@ -9,10 +9,18 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.tabs.TabLayout;
 import com.happylearn.R;
+import com.happylearn.adapters.HomePageAdapter;
+import com.happylearn.dao.Docente;
+import com.happylearn.dao.Slot;
 import com.happylearn.routes.HomeRequest;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class HomeFragment extends Fragment {
     public HomeFragment() {
@@ -32,8 +40,14 @@ public class HomeFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         // Lookup the recyclerview in activity layout
-        TextView ripetizioniHome = (TextView) view.findViewById(R.id.ripetizioniHome);
+
+//        TextView ripetizioniHome = (TextView) view.findViewById(R.id.ripetizioniHome);
+
         TabLayout tabLayout = (TabLayout) view.findViewById(R.id.tabName);
+
+        RecyclerView availableSlots = (RecyclerView) view.findViewById(R.id.available_slots);
+
+
         //choice to not make a heavy network request if i already have a booking
         //this only fails if I make a booking myself from another client or if
         //an admin does it
@@ -43,8 +57,9 @@ public class HomeFragment extends Fragment {
         String username = ((HappyLearnApplication)this.getActivity().getApplication()).getUserData().getUsername().get();
         String role = ((HappyLearnApplication)this.getActivity().getApplication()).getUserData().getRole().get();
 
-        HomeRequest availableSlot = new HomeRequest(this.getContext(), this.getActivity(), username,role, ripetizioniHome, tabLayout);
+        HomeRequest availableSlot = new HomeRequest(this.getContext(), this.getActivity(), username,role, availableSlots, tabLayout);
         availableSlot.start();
+
 
         //need this else since removing the fragment takes it away
 

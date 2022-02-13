@@ -6,6 +6,8 @@ import android.util.Log;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.google.android.material.tabs.TabLayout;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -33,11 +35,11 @@ public class allPrenotazioniHomeRequest implements Callback<List<Prenotazione>> 
     private Activity activity;
     private String username;
     private List<List<List<Slot>>> availableSlotsForDayandTime;
-    private TextView ripetizioniHome;
+    private RecyclerView ripetizioniHome;
     private List<Utente> utenti;
     private TabLayout tabHome;
     public allPrenotazioniHomeRequest(Context context, Activity activity, String username,
-                                      List<List<List<Slot>>> availableSlotsForDayandTime, TextView ripetizioniHome,
+                                      List<List<List<Slot>>> availableSlotsForDayandTime, RecyclerView ripetizioniHome,
                                       List<Utente> utenti, TabLayout tabHome) {
         this.context = context;
         this.activity = activity;
@@ -82,6 +84,9 @@ public class allPrenotazioniHomeRequest implements Callback<List<Prenotazione>> 
             List<Prenotazione> allPrenotazioni = response.body();
             //this.availableSlotsForDayandTime    this.utenti
             //testati ed arrivano i dati competi
+
+
+
             //ToDo logica visualizazione Admin
 
         }else {
