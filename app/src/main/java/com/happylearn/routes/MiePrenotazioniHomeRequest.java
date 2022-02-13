@@ -6,10 +6,15 @@ import android.util.Log;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.google.android.material.tabs.TabLayout;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.happylearn.R;
+import com.happylearn.adapters.HomePageAdapter;
+import com.happylearn.dao.BindableSlots;
 import com.happylearn.dao.Docente;
 import com.happylearn.dao.Prenotazione;
 import com.happylearn.dao.Slot;
@@ -18,6 +23,7 @@ import com.happylearn.views.HappyLearnApplication;
 
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import okhttp3.OkHttpClient;
@@ -33,17 +39,17 @@ public class MiePrenotazioniHomeRequest implements Callback<List<Prenotazione>> 
     private Activity activity;
     private String username;
     private List<List<List<Slot>>> availableSlotsForDayandTime;
-    private TextView ripetizioniHome;
+    private RecyclerView viewSlots;
     private TabLayout tabHome;
 
 
     public MiePrenotazioniHomeRequest(Context context, Activity activity, String username, List<List<List<Slot>>>
-            availableSlotsForDayandTime, TextView ripetizioniHome,TabLayout tabHome) {
+            availableSlotsForDayandTime, RecyclerView viewSlots, TabLayout tabHome) {
         this.context = context;
         this.activity = activity;
         this.username = username;
         this.availableSlotsForDayandTime = availableSlotsForDayandTime;
-        this.ripetizioniHome = ripetizioniHome;
+        this.viewSlots = viewSlots;
         BASE_URL = context.getString(R.string.BASE_URL);
         this.tabHome=tabHome;
     }
@@ -158,9 +164,9 @@ public class MiePrenotazioniHomeRequest implements Callback<List<Prenotazione>> 
 
 
     private void viewBooking(List<List<Slot>> slotForTime,int day , List<Prenotazione> prenotazioni) {
-        ripetizioniHome.setText("Ripetizioni disponibili di:"+HomeRequest.dayToString(day) +"\n");
-        for(int i=0;i<slotForTime.size();i++){
-            ripetizioniHome.append(HomeRequest.timeToString(i) +" -------------------------------------------------\n");
+        List<BindableSlots> bindableSlots = new ArrayList<>();
+
+        for(int i = 0; i<slotForTime.size(); i++){
             for (Slot slot : slotForTime.get(i)){
                 Boolean flagJustExistReservation = false;
                 Prenotazione prenotazione =null;
@@ -171,19 +177,30 @@ public class MiePrenotazioniHomeRequest implements Callback<List<Prenotazione>> 
                     }
                 }
                 if (flagJustExistReservation == false){
-                    ripetizioniHome.append(slot.getCourse() +"\n");
-                    for (Docente docente : slot.getTeacherList()){
-                        ripetizioniHome.append("("+ docente.getId()+") " + docente.getNome() + " " + docente.getCognome() + "\n");
-                    }
+                    bindableSlots.add(new BindableSlots(slot));
+//                    viewSlots.append(slot.getCourse() +"\n");
+//                    for (Docente docente : slot.getTeacherList()){
+//                        // lista append
+//                        viewSlots.append("("+ docente.getId()+") " + docente.getNome() + " " + docente.getCognome() + "\n");
+//                    }
                 }
-                else{
-                    ripetizioniHome.append("Prenotazione già attiva su: \nCorso: "+ prenotazione.getCorso()  +"\nDocente: ("
-                            +prenotazione.getIdDocente()+") "+prenotazione.getNomeDocente() +" " + prenotazione.getCognomeDocente() +"\n" );
-                    break;
-                }
+//                else{
+//                    viewSlots.append("Prenotazione già attiva su: \nCorso: "+ prenotazione.getCorso()  +"\nDocente: ("
+//                            +prenotazione.getIdDocente()+") "+prenotazione.getNomeDocente() +" " + prenotazione.getCognomeDocente() +"\n" );
+//                    break;
+//                }
             }
 
         }
 
+        ((HappyLearnApplication)activity.getApplication()).setSlots(bindableSlots);
+
+        // Create adapter passing in the sample user data
+        HomePageAdapter adapter = new HomePageAdapter(((HappyLearnApplication)activity.getApplication()).getSlots(), "mySlots");
+
+        // Attach the adapter to the recyclerview to populate items
+        this.viewSlots.setAdapter(adapter);
+        // Set layout manager to position the items
+        this.viewSlots.setLayoutManager(new LinearLayoutManager(context));
     }
 }
