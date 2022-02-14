@@ -10,6 +10,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.happylearn.R;
+import com.happylearn.adapters.PrenotazioniAdapter;
+import com.happylearn.dao.BindablePrenotazione;
 import com.happylearn.dao.Prenotazione;
 import com.happylearn.dao.SimpleMessage;
 import com.happylearn.routes.interceptors.SetSessionOnRequestInterceptor;
@@ -17,6 +19,8 @@ import com.happylearn.views.HappyLearnApplication;
 import com.happylearn.views.HomeFragment;
 
 import org.json.JSONObject;
+
+import java.util.List;
 
 import okhttp3.OkHttpClient;
 import retrofit2.Call;
@@ -72,8 +76,12 @@ public class DoPrenotazioneRequest implements Callback<SimpleMessage> {
     public void onResponse(Call<SimpleMessage> call, Response<SimpleMessage> response) {
         if(response.isSuccessful()) {
             SimpleMessage message = response.body();
-            if (message!=null)  Toast.makeText(context, message.getMessage(), Toast.LENGTH_LONG).show();
+            if (message!=null){
+                Toast.makeText(context, message.getMessage(), Toast.LENGTH_LONG).show();
+                updateBookings(prenotazione);
+            }
             else Toast.makeText(context, "message.getMessage()==null", Toast.LENGTH_LONG).show();
+
 
             ((AppCompatActivity)activity).getSupportFragmentManager().beginTransaction()
                     .setReorderingAllowed(true)
@@ -97,6 +105,54 @@ public class DoPrenotazioneRequest implements Callback<SimpleMessage> {
         Toast.makeText(context, "errore inatteso", Toast.LENGTH_LONG).show();
         t.printStackTrace();
     }
+
+    /**
+     * Given a booking that has been added to the user
+     * it updates the bookings or myBookings views, according
+     * to this new addition
+     * */
+    private void updateBookings(Prenotazione booking){
+        HappyLearnApplication application = (HappyLearnApplication)activity.getApplication();
+        String role = application.getUserData().getRole().get();
+        String username = application.getUserData().getUsername().get();
+        //set the adapter as global
+        PrenotazioniAdapter adapter;
+        List<BindablePrenotazione> bookings;
+
+        //picking right view to change
+        //admin not choosing for himself
+        if(role.equals("amministratore") && !username.equals(booking.getUtente()) ){
+            adapter = application.getBookingsAdapter();
+            bookings = application.getBookings();
+        }
+        else { //admin choosing for himself or normal user
+            adapter = application.getMyBookingsAdapter();
+            bookings = application.getMyBookings();
+        }
+        int bookingIndex = findBookingInBookings(booking,bookings);
+        //if booking already exist, just update the status, else add the booking to the array
+        if(bookingIndex != -1){
+            bookings.get(bookingIndex).getStato().set("attiva");
+        }
+        else {
+            bookings.add(0,new BindablePrenotazione(booking));
+            adapter.notifyDataSetChanged();
+        }
+
+    }
+    private int findBookingInBookings(Prenotazione booking, List<BindablePrenotazione> bookings){
+        int i = 0;
+        for(BindablePrenotazione supBooking : bookings){
+            if(supBooking.getCorso().get().equals(booking.getCorso())
+                && supBooking.getUtente().get().equals(booking.getUtente())
+                && supBooking.getGiorno().get().equals(booking.getGiorno())
+                && supBooking.getOrario().get().equals(booking.getOrario()))
+                return i;
+            else i++;
+        }
+        return -1;
+    }
+
 }
 
 

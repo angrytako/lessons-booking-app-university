@@ -28,7 +28,6 @@ public class GetAndSetSessionInterceptor implements Interceptor {
         //get the session cookie, if there is one
         if(cookielist.size() == 1) {
             application.setSessionCookie((cookielist.get(0).split("="))[1]);
-            Log.d("SESSION_HAPPY",cookielist.get(0));
             SharedPreferences sharedPreferences = activity.getPreferences(activity.MODE_PRIVATE);
             sharedPreferences.edit().putString("SESSION",(cookielist.get(0).split("="))[1]).apply();
         }

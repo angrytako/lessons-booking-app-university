@@ -69,19 +69,22 @@ public class GetMyInfoRequest implements Callback<SimpleUserData> {
 
     @Override
     public void onResponse(Call<SimpleUserData> call, Response<SimpleUserData> response) {
-        Log.d("HAPPY_RESP","quiiiiiiiiiiiiiiiiii");
         UserData globalUserData = ((HappyLearnApplication)activity.getApplication()).getUserData();
         if(response.isSuccessful()) {
             SimpleUserData userData = response.body();
 
             globalUserData.setUsername(userData.getUsername());
             globalUserData.setRole(userData.getRole());
+            ((AppCompatActivity)context).getSupportFragmentManager().beginTransaction()
+                    .setReorderingAllowed(true)
+                    .add(R.id.fragment_container, HomeFragment.class, null)
+                    .commit();
         } else{
             globalUserData.setUsername("Guest");
             globalUserData.setRole("Guest");
             try {
                 JSONObject jObjError = new JSONObject(response.errorBody().string());
-                Toast.makeText(context, jObjError.getString("error"), Toast.LENGTH_LONG).show();
+                Toast.makeText(context, "session expired", Toast.LENGTH_LONG).show();
             } catch (Exception e) {
                 e.printStackTrace();
             }

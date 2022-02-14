@@ -2,6 +2,7 @@ package com.happylearn.views;
 
 import android.app.Application;
 
+import com.happylearn.adapters.PrenotazioniAdapter;
 import com.happylearn.dao.BindablePrenotazione;
 import com.happylearn.dao.Slot;
 import com.happylearn.dao.UserData;
@@ -11,8 +12,26 @@ import java.util.List;
 public class HappyLearnApplication extends Application {
     private UserData userData;
     private List<BindablePrenotazione> myBookings = null;
+    private List<BindablePrenotazione> bookings = null;
+    private PrenotazioniAdapter bookingsAdapter, myBookingsAdapter;
     private Slot slot;
 
+
+    public PrenotazioniAdapter getBookingsAdapter() {
+        return bookingsAdapter;
+    }
+
+    public void setBookingsAdapter(PrenotazioniAdapter bookingsAdapter) {
+        this.bookingsAdapter = bookingsAdapter;
+    }
+
+    public PrenotazioniAdapter getMyBookingsAdapter() {
+        return myBookingsAdapter;
+    }
+
+    public void setMyBookingsAdapter(PrenotazioniAdapter myBookingsAdapter) {
+        this.myBookingsAdapter = myBookingsAdapter;
+    }
 
     public Slot getSlot() {
         return slot;
@@ -22,7 +41,6 @@ public class HappyLearnApplication extends Application {
         this.slot = slot;
     }
 
-    private List<BindablePrenotazione> bookings = null;
     public UserData getUserData(){
         return userData;
     }

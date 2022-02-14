@@ -21,6 +21,7 @@ import com.happylearn.views.HappyLearnApplication;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import okhttp3.OkHttpClient;
@@ -77,7 +78,7 @@ public class MiePrenotazioniRequest implements Callback<List<Prenotazione>> {
     public void onResponse(Call<List<Prenotazione>> call, Response<List<Prenotazione>> response) {
         if(response.isSuccessful()) {
             List<Prenotazione> prenotazioni = response.body();
-            ArrayList<BindablePrenotazione> bindablePrenotazioni = new ArrayList<>();
+            LinkedList<BindablePrenotazione> bindablePrenotazioni = new LinkedList<>();
             for (Prenotazione p : prenotazioni)
                 bindablePrenotazioni.add(new BindablePrenotazione(p));
             ((HappyLearnApplication)activity.getApplication()).setMyBookings(bindablePrenotazioni);
@@ -86,6 +87,8 @@ public class MiePrenotazioniRequest implements Callback<List<Prenotazione>> {
 
             // Attach the adapter to the recyclerview to populate items
             miePrenotazioni.setAdapter(adapter);
+            //set the adapter as global
+            ((HappyLearnApplication)activity.getApplication()).setMyBookingsAdapter(adapter);
             // Set layout manager to position the items
             miePrenotazioni.setLayoutManager(new LinearLayoutManager(context));
         } else{

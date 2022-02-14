@@ -41,14 +41,11 @@ public class MainActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 
+
         HomeFragment homeFrag = new HomeFragment();
         LoginFragment loginFrag = new LoginFragment();
         MiePrenotazioniFragment miePrenFrag = new MiePrenotazioniFragment();
-        //setting fragment on view
-        getSupportFragmentManager().beginTransaction()
-                .setReorderingAllowed(true)
-                .add(R.id.fragment_container, HomeFragment.class, null)
-                .commit();
+
         UserData startingData = new UserData("Guest","guest");
         ((HappyLearnApplication) this.getApplication()).setUserData(startingData);
 
@@ -58,14 +55,20 @@ public class MainActivity extends AppCompatActivity {
         //saved session cookie in local storage, if login was made
         //call to retrieve session info
         //sets all to guest if call fails
+        //after call sets up the home fragment
         SharedPreferences sharedPreferences = getPreferences(MODE_PRIVATE);
         String sessionCookie = sharedPreferences.getString("SESSION", null);
         if(sessionCookie != null){
-            Log.d("HAPPY_SES",sessionCookie);
             ((HappyLearnApplication)getApplication()).setSessionCookie(sessionCookie);
             new GetMyInfoRequest(this,this).start();
         }
-
+        else {
+            //setting fragment on view
+            getSupportFragmentManager().beginTransaction()
+                    .setReorderingAllowed(true)
+                    .add(R.id.fragment_container, HomeFragment.class, null)
+                    .commit();
+        }
 
         //Bind to header
         View hv = mBinding.navbarItemsNv.getHeaderView(0);
