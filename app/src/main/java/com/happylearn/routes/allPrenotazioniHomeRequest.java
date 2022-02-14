@@ -107,7 +107,7 @@ public class allPrenotazioniHomeRequest implements Callback<List<Prenotazione>> 
                 Boolean flagUtenteJustHaveReservation = false;
                 for (Prenotazione p : allPrenotazioni) {
                     if (p.getUtente().equals(u.getUsername())) {
-                        if (p.getGiorno() == slot.getDay() && p.getOrario() == slot.getTime()) {
+                        if (p.getGiorno() == slot.getDay() && p.getOrario() == slot.getTime() && !"cancelata".equals(p.getStato())) {
                             flagUtenteJustHaveReservation = true;
                         }
                     }
