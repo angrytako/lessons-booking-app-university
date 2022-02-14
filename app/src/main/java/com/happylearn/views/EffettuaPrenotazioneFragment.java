@@ -152,8 +152,12 @@ public class EffettuaPrenotazioneFragment extends Fragment {
 
     public static Docente parserDocente(String text) {
         String[] singoleComponenti = text.split(" ");
-
-        return new Docente(Integer.parseInt(String.valueOf(singoleComponenti[0].charAt(1))),
+        String id ="";
+        for (int i=1; i< singoleComponenti.length;i++) {
+            if (singoleComponenti[0].charAt(i)==')') break;
+            else id = id + singoleComponenti[0].charAt(i);
+        }
+        return new Docente(Integer.parseInt(id),
                 singoleComponenti[1].trim(), singoleComponenti[2].trim(), false);
     }
 
