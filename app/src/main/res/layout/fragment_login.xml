@@ -11,13 +11,13 @@
         android:layout_height="match_parent"
         android:text="LOGIN"
         android:textSize="50sp"
-        tools:layout_editor_absoluteX="0dp"
-        tools:layout_editor_absoluteY="0dp" />
+        android:gravity="center_horizontal"
+        android:textColor="@color/black"/>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Username"
+        android:text="Username:"
         app:layout_constraintBottom_toTopOf="@+id/username_et"
         app:layout_constraintStart_toStartOf="parent" />
 
@@ -34,7 +34,7 @@
         android:id="@+id/textView2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Password"
+        android:text="Password:"
         app:layout_constraintBottom_toTopOf="@+id/password_et"
         app:layout_constraintStart_toStartOf="parent" />
 
@@ -52,6 +52,8 @@
         android:id="@+id/login_btn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:backgroundTint="#314CE1"
+        android:backgroundTintMode="add"
         android:text="Login"
         android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="@+id/textView"

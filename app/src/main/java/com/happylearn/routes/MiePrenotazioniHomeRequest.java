@@ -49,7 +49,7 @@ public class MiePrenotazioniHomeRequest implements Callback<List<Prenotazione>> 
         this.availableSlotsForDayandTime = availableSlotsForDayandTime;
         this.viewSlots = viewSlots;
         BASE_URL = context.getString(R.string.BASE_URL);
-        this.tabHome=tabHome;
+        this.tabHome = tabHome;
     }
 
     public void start() {
@@ -81,17 +81,22 @@ public class MiePrenotazioniHomeRequest implements Callback<List<Prenotazione>> 
         if (response.isSuccessful()) {
             List<Prenotazione> prenotazioni = response.body();
 
-            viewBooking(availableSlotsForDayandTime.get(0),0,prenotazioni);
+            viewBooking(availableSlotsForDayandTime.get(0), 0, prenotazioni);
 
             tabHome.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
                 @Override
                 public void onTabSelected(TabLayout.Tab tab) {
-                    viewBooking(availableSlotsForDayandTime.get(tab.getPosition()),tab.getPosition(),prenotazioni);
+                    viewBooking(availableSlotsForDayandTime.get(tab.getPosition()), tab.getPosition(), prenotazioni);
                 }
+
                 @Override
-                public void onTabUnselected(TabLayout.Tab tab) { }
+                public void onTabUnselected(TabLayout.Tab tab) {
+                }
+
                 @Override
-                public void onTabReselected(TabLayout.Tab tab) { }
+                public void onTabReselected(TabLayout.Tab tab) {
+                    viewBooking(availableSlotsForDayandTime.get(tab.getPosition()), tab.getPosition(), prenotazioni);
+                }
             });
 
         } else {
@@ -112,11 +117,10 @@ public class MiePrenotazioniHomeRequest implements Callback<List<Prenotazione>> 
     }
 
 
+    private void viewBooking(List<List<Slot>> slotForTime, int day, List<Prenotazione> prenotazioni) {
+        List<Slot> listone = new ArrayList<>();
 
-    private void viewBooking(List<List<Slot>> slotForTime,int day , List<Prenotazione> prenotazioni) {
-     List<Slot> listone = new ArrayList<>();
-
-        for(int i = 0; i<slotForTime.size(); i++){
+        for (int i = 0; i < slotForTime.size(); i++) {
             for (Slot slot : slotForTime.get(i)) {
                 Boolean flagJustExistReservation = false;
                 Prenotazione prenotazione = null;
@@ -133,15 +137,15 @@ public class MiePrenotazioniHomeRequest implements Callback<List<Prenotazione>> 
 
         }
 
+        if (listone.size()==0) listone.add(new Slot("",null,-1,-1));
 
+        // Create adapter passing in the sample user data
+        HomePageAdapter adapter = new HomePageAdapter(listone, context, (AppCompatActivity) activity);
 
-            // Create adapter passing in the sample user data
-            HomePageAdapter adapter = new HomePageAdapter(listone, context, (AppCompatActivity)activity );
-
-            // Attach the adapter to the recyclerview to populate items
-            this.viewSlots.setAdapter(adapter);
-            // Set layout manager to position the items
-            this.viewSlots.setLayoutManager(new LinearLayoutManager(context));
+        // Attach the adapter to the recyclerview to populate items
+        this.viewSlots.setAdapter(adapter);
+        // Set layout manager to position the items
+        this.viewSlots.setLayoutManager(new LinearLayoutManager(context));
 
 
     }

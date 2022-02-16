@@ -2,6 +2,7 @@ package com.happylearn.views;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -104,7 +105,10 @@ public class EffettuaPrenotazioneFragment extends Fragment {
 
 
             if ("guest".equals(role)) {
+                prenota.setBackgroundColor(Color.BLUE);
+              //  prenota.setBackgroundColor("\"#2898F1");
                 prenota.setText("Login");
+
                 prenota.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {

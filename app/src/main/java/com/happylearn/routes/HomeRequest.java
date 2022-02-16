@@ -110,6 +110,7 @@ public class HomeRequest implements Callback<List<Slot>> {
 
                         @Override
                         public void onTabReselected(TabLayout.Tab tab) {
+                            viewBooking(availableSlotsForDayandTime.get(tab.getPosition()), tab.getPosition());
                         }
                     });
 
@@ -143,6 +144,8 @@ public class HomeRequest implements Callback<List<Slot>> {
             }
         }
 
+
+        if (listone.size()==0) listone.add(new Slot("",null,-1,-1));
         // Create adapter passing in the sample user data
         HomePageAdapter adapter = new HomePageAdapter(listone, context, (AppCompatActivity) activity);
 
@@ -196,7 +199,7 @@ public class HomeRequest implements Callback<List<Slot>> {
     public static String dayToString(int day) {
         switch (day) {
             case 0:
-                return "Lundedì";
+                return "Lunedì";
             case 1:
                 return "Martedì";
             case 2:
@@ -219,13 +222,13 @@ public class HomeRequest implements Callback<List<Slot>> {
     public static String timeToString(int time) {
         switch (time) {
             case 0:
-                return "15:00 -> 16:00";
+                return "15:00 - 16:00";
             case 1:
-                return "16:00 -> 17:00";
+                return "16:00 - 17:00";
             case 2:
-                return "17:00 -> 18:00";
+                return "17:00 - 18:00";
             case 3:
-                return "18:00 -> 19:00";
+                return "18:00 - 19:00";
             default:
                 return "Error Time";
         }

@@ -15,29 +15,39 @@
             android:id="@+id/utente"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Utente: " />
+            android:text="Utente: "
+            android:gravity="center"
+            android:textSize="18dp"
+            android:textColor="@color/black"/>
 
 
         <TextView
             android:id="@+id/corso"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Corso: " />
+            android:text="Corso: "
+            android:textAlignment="gravity"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:textColor="@color/black"
+            android:textStyle="bold|italic" />
 
         <TextView
             android:id="@+id/giorno"
+            android:textColor="@color/black"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Giorno: " />
 
         <TextView
             android:id="@+id/ora"
+            android:textColor="@color/black"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Orario: " />
 
         <TextView
             android:id="@+id/textView6"
+            android:textColor="@color/black"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Scegli il docente con cui effettuare la ripetizione:" />
@@ -52,6 +62,7 @@
 
         <TextView
             android:id="@+id/sceltaAdmin"
+            android:textColor="@color/black"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Scegli l'utente su cui effettuare la prenotazione:"/>
@@ -72,6 +83,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:backgroundTint="#BD4620"
+                android:backgroundTintMode="add"
                 android:text="Annulla" />
 
             <Button
@@ -79,6 +92,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
+                android:backgroundTint="#25AC2B"
+                android:backgroundTintMode="add"
                 android:text="Prenota" />
 
         </LinearLayout>

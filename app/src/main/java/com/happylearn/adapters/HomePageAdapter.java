@@ -25,7 +25,7 @@ public class HomePageAdapter extends RecyclerView.Adapter<HomePageAdapter.ViewHo
     private List<Slot> slots;
     private AppCompatActivity activity;
     private LayoutInflater mInflater;
-    private int blocco=0;
+    private int blocco = 0;
     private Boolean flag = true;
 
     public HomePageAdapter(List<Slot> slots, Context context, AppCompatActivity activity) {
@@ -49,25 +49,33 @@ public class HomePageAdapter extends RecyclerView.Adapter<HomePageAdapter.ViewHo
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         // Get the data model based on position
         Slot slot = slots.get(position);
-        if (slot.getTime() > blocco || flag) {
-            flag=false;
-            blocco=slot.getTime();
-            holder.ora.setText(HomeRequest.timeToString(slot.getTime()));
-        } else holder.ora.setHeight(1);
-        holder.btn.setText(slot.getCourse());
-        holder.btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //Toast.makeText(e.getContext(), "hai cliccato " + position, Toast.LENGTH_SHORT).show();
-                ((HappyLearnApplication) activity.getApplication()).setSlot(slot);
-                activity.getSupportFragmentManager().beginTransaction()
-                        .setReorderingAllowed(true)
-                        .addToBackStack(null)
-                        .remove(activity.getSupportFragmentManager().getFragments().get(0))
-                        .add(R.id.fragment_container, EffettuaPrenotazioneFragment.class, null)
-                        .commit();
+        if (slot.getDay() == -1) {
+            holder.ora.setText("Non ci sono altre lezioni disponibili");
+            holder.btn.setText("0 Slot disponibili");
+        } else {
+            if (slot.getTime() > blocco || flag) {
+                flag = false;
+                blocco = slot.getTime();
+                holder.ora.setText(HomeRequest.timeToString(slot.getTime()));
+            } else {
+                holder.ora.setHeight(1);
             }
-        });
+
+            holder.btn.setText(slot.getCourse());
+            holder.btn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    //Toast.makeText(e.getContext(), "hai cliccato " + position, Toast.LENGTH_SHORT).show();
+                    ((HappyLearnApplication) activity.getApplication()).setSlot(slot);
+                    activity.getSupportFragmentManager().beginTransaction()
+                            .setReorderingAllowed(true)
+                            .addToBackStack(null)
+                            .remove(activity.getSupportFragmentManager().getFragments().get(0))
+                            .add(R.id.fragment_container, EffettuaPrenotazioneFragment.class, null)
+                            .commit();
+                }
+            });
+        }
     }
 
     @Override
