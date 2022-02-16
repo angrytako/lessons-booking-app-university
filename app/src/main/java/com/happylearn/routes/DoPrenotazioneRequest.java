@@ -78,7 +78,7 @@ public class DoPrenotazioneRequest implements Callback<SimpleMessage> {
             SimpleMessage message = response.body();
             if (message!=null){
                 Toast.makeText(context, message.getMessage(), Toast.LENGTH_LONG).show();
-                //updateBookings(prenotazione);
+                updateBookings(prenotazione);
             }
             else Toast.makeText(context, "message.getMessage()==null", Toast.LENGTH_LONG).show();
 
@@ -134,11 +134,14 @@ public class DoPrenotazioneRequest implements Callback<SimpleMessage> {
         int bookingIndex = findBookingInBookings(booking,bookings);
         //if booking already exist, just update the status, else add the booking to the array
         if(bookingIndex != -1){
+            bookings.get(bookingIndex).getIdDocente().set(booking.getIdDocente());
+            bookings.get(bookingIndex).getNomeDocente().set(booking.getNomeDocente());
+            bookings.get(bookingIndex).getCognomeDocente().set(booking.getCognomeDocente());
             bookings.get(bookingIndex).getStato().set("attiva");
         }
         else {
             bookings.add(0,new BindablePrenotazione(booking));
-            adapter.notifyDataSetChanged();
+            adapter.notifyItemChanged(0);
         }
 
     }
