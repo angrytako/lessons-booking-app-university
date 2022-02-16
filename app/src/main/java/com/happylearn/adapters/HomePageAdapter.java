@@ -53,13 +53,25 @@ public class HomePageAdapter extends RecyclerView.Adapter<HomePageAdapter.ViewHo
             holder.ora.setText("Non ci sono altre lezioni disponibili");
             holder.btn.setText("0 Slot disponibili");
         } else {
-            if (slot.getTime() > blocco || flag) {
-                flag = false;
-                blocco = slot.getTime();
+            if (position == 0) {
                 holder.ora.setText(HomeRequest.timeToString(slot.getTime()));
+                holder.ora.setVisibility(View.VISIBLE);
+
             } else {
-                holder.ora.setHeight(1);
+                Slot oldSlot = slots.get(position - 1);
+                holder.ora.setText(HomeRequest.timeToString(slot.getTime()));
+
+
+                if (slot.getTime() > oldSlot.getTime()) {
+                    holder.ora.setText(HomeRequest.timeToString(slot.getTime()));
+                    holder.ora.setVisibility(View.VISIBLE);
+                } else {
+                    holder.ora.setVisibility(View.GONE);
+                }
+
+
             }
+
 
             holder.btn.setText(slot.getCourse());
             holder.btn.setOnClickListener(new View.OnClickListener() {

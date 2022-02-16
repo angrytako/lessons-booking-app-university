@@ -67,7 +67,7 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/available_slots"
                 android:layout_width="match_parent"
-                android:layout_height="532dp" />
+                android:layout_height="550dp" />
         </FrameLayout>
 
 
