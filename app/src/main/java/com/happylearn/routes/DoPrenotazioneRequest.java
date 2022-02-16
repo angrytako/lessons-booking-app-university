@@ -78,7 +78,7 @@ public class DoPrenotazioneRequest implements Callback<SimpleMessage> {
             SimpleMessage message = response.body();
             if (message!=null){
                 Toast.makeText(context, message.getMessage(), Toast.LENGTH_LONG).show();
-                updateBookings(prenotazione);
+                //updateBookings(prenotazione);
             }
             else Toast.makeText(context, "message.getMessage()==null", Toast.LENGTH_LONG).show();
 
@@ -89,6 +89,8 @@ public class DoPrenotazioneRequest implements Callback<SimpleMessage> {
                     .remove(((AppCompatActivity)activity).getSupportFragmentManager().getFragments().get(0))
                     .add(R.id.fragment_container, HomeFragment.class, null)
                     .commit();
+
+
         } else{
             try {
                 JSONObject jObjError = new JSONObject(response.errorBody().string());

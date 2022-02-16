@@ -107,14 +107,13 @@ public class allPrenotazioniHomeRequest implements Callback<List<Prenotazione>> 
                 Boolean flagUtenteJustHaveReservation = false;
                 for (Prenotazione p : allPrenotazioni) {
                     if (p.getUtente().equals(u.getUsername())) {
-                        if (p.getGiorno() == slot.getDay() && p.getOrario() == slot.getTime() && !"cancelata".equals(p.getStato())) {
+                        if (p.getGiorno() == slot.getDay() && p.getOrario() == slot.getTime() && !"cancellata".equals(p.getStato())) {
                             flagUtenteJustHaveReservation = true;
                         }
                     }
                 }
                 if (flagUtenteJustHaveReservation == false){
                     utentiSelected.add(u.getUsername());
-                    Toast.makeText(context, u.getUsername(), Toast.LENGTH_LONG).show();
                 }
             }
 
@@ -136,7 +135,7 @@ public class allPrenotazioniHomeRequest implements Callback<List<Prenotazione>> 
 
                     } else {
                         CheckBox checkBoxSelected = (CheckBox) recyclerViewCheckBox.getLayoutManager().findViewByPosition(choiseCheckBox).findViewById(R.id.docenti_List_Item);
-                        CheckBox checkBoxUtenti = (CheckBox) recyclerViewUtenti.getLayoutManager().findViewByPosition(choiseCheckBox).findViewById(R.id.docenti_List_Item);
+                        CheckBox checkBoxUtenti = (CheckBox) recyclerViewUtenti.getLayoutManager().findViewByPosition(choiseUtenti).findViewById(R.id.docenti_List_Item);
                         String utenteSelected = checkBoxUtenti.getText().toString();
                         Docente docenteSelected = EffettuaPrenotazioneFragment.parserDocente(checkBoxSelected.getText().toString());
                         DoPrenotazioneRequest availableSlot = new DoPrenotazioneRequest(context, activity,
