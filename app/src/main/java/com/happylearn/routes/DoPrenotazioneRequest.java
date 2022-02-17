@@ -131,6 +131,8 @@ public class DoPrenotazioneRequest implements Callback<SimpleMessage> {
             adapter = application.getMyBookingsAdapter();
             bookings = application.getMyBookings();
         }
+        if(bookings == null || adapter == null)
+            return;
         int bookingIndex = findBookingInBookings(booking,bookings);
         //if booking already exist, just update the status, else add the booking to the array
         if(bookingIndex != -1){
